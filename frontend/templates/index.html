@@ -1,39 +1,16 @@
-<!DOCTYPE html>
+{% extends "layouts/base.html" %}
 
-<html lang="en">
+{% block content %}
 
-<head>
+<section class="welcome-section">
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
-
-    <title>Student Performance Assistant</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static',
-          filename='css/style.css') }}">
-
-</head>
-
-<body>
-
-    <h1>
-
-        Student Performance Assistant
-
-    </h1>
+    <h2>Welcome to your Student Performance Assistant</h2>
 
     <p>
-
-        Milestone 1 is running successfully.
-
+        Helping NWU students monitor and improve their academic performance
+        through personalised feedback.
     </p>
 
-<script src="{{ url_for('static',
-filename='js/app.js') }}"></script>
+</section>
 
-</body>
-
-</html>
+{% endblock %}

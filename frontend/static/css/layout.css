@@ -1,0 +1,47 @@
+/* ===========================
+   Layout
+=========================== */
+
+main{
+
+    width:100%;
+
+    max-width:1400px;
+
+    margin:auto;
+
+    padding:40px;
+
+}
+
+.welcome-section{
+
+    text-align:center;
+
+    padding:80px 20px;
+
+}
+
+.welcome-section h2{
+
+    font-size:2.5rem;
+
+    color:#4E2A84;
+
+    margin-bottom:20px;
+
+}
+
+.welcome-section p{
+
+    font-size:1.1rem;
+
+    color:#555;
+
+    max-width:700px;
+
+    margin:auto;
+
+    line-height:1.8;
+
+}
