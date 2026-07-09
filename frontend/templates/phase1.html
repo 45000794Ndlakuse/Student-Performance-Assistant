@@ -1,17 +1,192 @@
+<!--
+==================================================
+Phase 1
+Develop Personal Academic Model
+
+Purpose:
+Collect student information and create a personalised
+assessment model.
+==================================================
+-->
+
 {% extends "layouts/base.html" %}
 
 {% block content %}
 
-<section class="container py-5">
+<div class="container py-5">
 
-    <h1>Phase 1</h1>
+    <div class="text-center mb-5">
 
-    <h3>Developing Your Personal Model</h3>
+        <h1>Phase 1</h1>
 
-    <p>
-        This page will guide you through creating your personalised assessment model.
-    </p>
+        <h3>Develop Your Personal Academic Model</h3>
 
-</section>
+        <p class="text-muted">
+            Begin by providing your personal information.
+        </p>
+
+    </div>
+
+    <form>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                First Name
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                placeholder="Enter your first name">
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                Surname
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                placeholder="Enter your surname">
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                Student Number
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                placeholder="e.g. 45000794">
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            type="button">
+
+            Continue
+
+        </button>
+
+    </form>
+
+</div>
+
+<!-- ===========================
+     Journey Introduction Popup
+=========================== -->
+
+<div
+class="modal fade"
+id="journeyModal"
+tabindex="-1"
+aria-hidden="true">
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h3 class="modal-title">
+
+Welcome to the Student Performance Assistant
+
+</h3>
+
+</div>
+
+<div class="modal-body">
+
+<p>
+
+This Feedback system will help you understand your academic performance and identify practical ways to improve your participation mark before the semester ends.
+
+</p>
+
+<p>
+
+Your information remains private and is stored only on your own computer when you choose to save your personalised model.
+
+</p>
+
+<hr>
+
+<h5>Your Journey</h5>
+
+<ul>
+
+<li>
+<strong>Phase 1:</strong>
+Develop your personalised assessment model.
+</li>
+
+<li>
+<strong>Phase 2:</strong>
+Generate your academic profile using your current marks.
+</li>
+
+<li>
+<strong>Phase 3:</strong>
+Explore different improvement plans to increase your participation mark.
+</li>
+
+<li>
+<strong>Phase 4:</strong>
+Save your personalised model as a CSV file for future use.
+</li>
+
+</ul>
+
+<div class="alert alert-info mt-4">
+
+<strong>Tip:</strong>
+
+Complete each phase carefully. The more accurate your information is, the more useful your improvement plans will be.
+
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn btn-primary"
+data-bs-dismiss="modal">
+
+Got it!
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const journeyModal = new bootstrap.Modal(
+        document.getElementById("journeyModal")
+    );
+
+    journeyModal.show();
+
+});
+
+</script>
 
 {% endblock %}
