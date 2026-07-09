@@ -1,0 +1,71 @@
+.welcome-options{
+
+    margin-top:100px;
+
+    text-align:center;
+
+}
+
+.cards-container{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:40px;
+
+    margin-top:40px;
+
+    flex-wrap:wrap;
+
+}
+
+.welcome-card{
+
+    width:350px;
+
+    background:white;
+
+    padding:35px;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.welcome-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.card-icon{
+
+    font-size:3rem;
+
+    color:var(--primary);
+
+    margin-bottom:20px;
+
+}
+
+.btn-primary{
+
+    margin-top:25px;
+
+    padding:12px 30px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:var(--primary);
+
+    color:white;
+
+    cursor:pointer;
+
+}
