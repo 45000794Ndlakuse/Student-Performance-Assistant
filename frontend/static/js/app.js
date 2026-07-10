@@ -97,6 +97,19 @@ if (addButton) {
 
         });
 
+        // Remove selected category from the dropdown
+
+        const selectedOption =
+            assessmentCategory.querySelector(
+                `option[value="${category}"]`
+            );
+
+        if (selectedOption) {
+
+            selectedOption.remove();
+
+        }
+
         renderAssessmentTable();
 
         assessmentCategory.selectedIndex = 0;
@@ -107,6 +120,17 @@ if (addButton) {
     });
 
 }
+
+//const selectedOption =
+//assessmentCategory.querySelector(
+//    `option[value="${category}"]`
+//);
+
+//if (selectedOption) {
+//
+//    selectedOption.remove();
+
+//}
 
 function renderAssessmentTable() {
 
@@ -162,6 +186,16 @@ function attachButtonEvents() {
 
             const index = this.dataset.index;
 
+            const removedAssessment = assessments[index];
+
+            const option = document.createElement("option");
+
+            option.value = removedAssessment.category;
+
+            option.textContent = removedAssessment.category;
+
+            assessmentCategory.appendChild(option);
+
             assessments.splice(index, 1);
 
             if (assessments.length === 0) {
@@ -189,5 +223,186 @@ function attachButtonEvents() {
         };
 
     });
+
+}
+
+// ==========================================
+// Continue To Phase 2
+// ==========================================
+
+const continueButton =
+document.getElementById("continuePhase2");
+
+if (continueButton) {
+
+    continueButton.addEventListener("click", () => {
+
+        validatePhaseOne();
+
+    });
+
+}
+
+function validatePhaseOne() {
+
+    const firstName =
+        document.getElementById("firstName").value.trim();
+
+    const surname =
+        document.getElementById("surname").value.trim();
+
+    const studentNumber =
+        document.getElementById("studentNumber").value.trim();
+
+    const module =
+        document.getElementById("module").value.trim();
+
+    if (
+        !firstName ||
+        !surname ||
+        !studentNumber ||
+        !module
+    ) {
+
+        alert(
+            "Please complete all student information before continuing."
+        );
+
+        return;
+    }
+
+    if (assessments.length === 0) {
+
+        alert(
+            "Please add at least one assessment before continuing."
+        );
+
+        return;
+    }
+
+    const totalWeight =
+        assessments.reduce(
+            (sum, item) =>
+                sum + Number(item.weight),
+            0
+        );
+
+    if (totalWeight !== 100) {
+
+        alert(
+            `Total weighting is currently ${totalWeight}%.\n\nThe assessment plan must equal exactly 100%.`
+        );
+
+        return;
+    }
+
+    showConfirmationModal();
+
+}
+
+function showConfirmationModal() {
+
+    const content =
+        document.getElementById(
+            "confirmationContent"
+        );
+
+    const firstName =
+        document.getElementById("firstName").value;
+
+    const surname =
+        document.getElementById("surname").value;
+
+    const studentNumber =
+        document.getElementById("studentNumber").value;
+
+    const module =
+        document.getElementById("module").value;
+
+    let tableRows = "";
+
+    assessments.forEach(item => {
+
+        tableRows += `
+
+        <tr>
+
+            <td>${item.category}</td>
+
+            <td>${item.quantity}</td>
+
+            <td>${item.weight}%</td>
+
+        </tr>
+
+        `;
+
+    });
+
+    content.innerHTML = `
+
+        <h5>Student Information</h5>
+
+        <p>
+
+        <strong>Name:</strong>
+        ${firstName} ${surname}
+
+        <br>
+
+        <strong>Student Number:</strong>
+        ${studentNumber}
+
+        <br>
+
+        <strong>Module:</strong>
+        ${module}
+
+        </p>
+
+        <hr>
+
+        <h5>Assessment Plan</h5>
+
+        <table class="table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Assessment</th>
+
+                    <th>Quantity</th>
+
+                    <th>Weight</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                ${tableRows}
+
+            </tbody>
+
+        </table>
+
+        <p>
+
+        Please verify that this assessment plan matches the assessment plan provided by your lecturer.
+
+        </p>
+
+    `;
+
+    const modal =
+        new bootstrap.Modal(
+            document.getElementById(
+                "confirmModelModal"
+            )
+        );
+
+    modal.show();
 
 }
