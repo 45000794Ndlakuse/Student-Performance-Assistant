@@ -27,166 +27,355 @@ assessment model.
 
     </div>
 
-    <form>
+    <div class="card shadow-sm mb-5">
 
-        <div class="mb-4">
+        <div class="card-header">
+
+            <h4>Student Information</h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label class="form-label">
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="firstName"
+                        placeholder="Enter first name">
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Surname
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="surname"
+                        placeholder="Enter surname">
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Student Number
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="studentNumber"
+                        placeholder="e.g. 45000794">
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Module
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="module"
+                        placeholder="e.g. CMPG321">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+
+        <h4>
+
+            Let's Build Your Assessment Plan
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+
+            Select one assessment category at a time.
+            After adding it, continue until your assessment
+            plan matches the one provided by your lecturer.
+
+        </p>
+
+        <div class="mb-3">
 
             <label class="form-label">
-                First Name
+
+                Assessment Category
+
+            </label>
+
+            <select
+                class="form-select"
+                id="assessmentCategory">
+
+                <option selected disabled>
+
+                    Select Category
+
+                </option>
+
+                <option>
+
+                    Semester Test
+
+                </option>
+
+                <option>
+
+                    Class Test
+
+                </option>
+
+                <option>
+
+                    Assignment
+
+                </option>
+
+                <option>
+
+                    Project
+
+                </option>
+
+                <option>
+
+                    Practical Assignment
+
+                </option>
+
+                <option>
+
+                    Attendance
+
+                </option>
+
+            </select>
+
+        </div>
+
+        <div
+            class="mb-3"
+            id="quantityContainer"
+            style="display:none;">
+
+            <label class="form-label">
+
+                Number of Assessments
+
             </label>
 
             <input
-                type="text"
+                type="number"
                 class="form-control"
-                placeholder="Enter your first name">
+                min="1"
+                id="assessmentQuantity">
 
         </div>
 
         <div class="mb-4">
 
             <label class="form-label">
-                Surname
+
+                Weighting (%)
+
             </label>
 
             <input
-                type="text"
+                type="number"
                 class="form-control"
-                placeholder="Enter your surname">
+                min="1"
+                max="100"
+                id="assessmentWeight">
 
-        </div>
-
-        <div class="mb-4">
-
-            <label class="form-label">
-                Student Number
-            </label>
-
-            <input
-                type="text"
-                class="form-control"
-                placeholder="e.g. 45000794">
 
         </div>
 
         <button
             class="btn btn-primary"
-            type="button">
+            type="button"
+            id="addAssessment">
 
-            Continue
+            Add Assessment
 
         </button>
+    </div>
 
-    </form>
+</div>
 
+<div class="card shadow-sm mt-5">
+
+    <table class="table table-hover" id="assessmentTable">
+
+    <thead>
+
+        <tr>
+
+            <th>Assessment</th>
+
+            <th>Quantity</th>
+
+            <th>Weighting (%)</th>
+
+            <th>Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody id="assessmentTableBody">
+
+        <tr id="emptyRow">
+
+            <td colspan="4" class="text-center text-muted">
+
+                No assessments have been added yet.
+
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
 </div>
 
 <!-- ===========================
      Journey Introduction Popup
 =========================== -->
 
-<div
-class="modal fade"
-id="journeyModal"
-tabindex="-1"
-aria-hidden="true">
+<div class="modal fade" id="journeyModal" tabindex="-1" aria-hidden="true">
 
-<div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
 
-<div class="modal-content">
+        <div class="modal-content">
 
-<div class="modal-header">
+            <div class="modal-header">
 
-<h3 class="modal-title">
+                <h3 class="modal-title">
 
-Welcome to the Student Performance Assistant
+                    Welcome to the Student Performance Assistant
 
-</h3>
+                </h3>
 
-</div>
+            </div>
 
-<div class="modal-body">
+            <div class="modal-body">
 
-<p>
+                <p>
 
-This Feedback system will help you understand your academic performance and identify practical ways to improve your participation mark before the semester ends.
+                    This Feedback system will help you understand your academic performance and identify practical ways
+                    to improve your participation mark before the semester ends.
 
-</p>
+                </p>
 
-<p>
+                <p>
 
-Your information remains private and is stored only on your own computer when you choose to save your personalised model.
+                    Your information remains private and is stored only on your own computer when you choose to save
+                    your personalised model.
 
-</p>
+                </p>
 
-<hr>
+                <hr>
 
-<h5>Your Journey</h5>
+                <h5>Your Journey</h5>
 
-<ul>
+                <ul>
 
-<li>
-<strong>Phase 1:</strong>
-Develop your personalised assessment model.
-</li>
+                    <li>
+                        <strong>Phase 1:</strong>
+                        Develop your personalised assessment model.
+                    </li>
 
-<li>
-<strong>Phase 2:</strong>
-Generate your academic profile using your current marks.
-</li>
+                    <li>
+                        <strong>Phase 2:</strong>
+                        Generate your academic profile using your current marks.
+                    </li>
 
-<li>
-<strong>Phase 3:</strong>
-Explore different improvement plans to increase your participation mark.
-</li>
+                    <li>
+                        <strong>Phase 3:</strong>
+                        Explore different improvement plans to increase your participation mark.
+                    </li>
 
-<li>
-<strong>Phase 4:</strong>
-Save your personalised model as a CSV file for future use.
-</li>
+                    <li>
+                        <strong>Phase 4:</strong>
+                        Save your personalised model as a CSV file for future use.
+                    </li>
 
-</ul>
+                </ul>
 
-<div class="alert alert-info mt-4">
+                <div class="alert alert-info mt-4">
 
-<strong>Tip:</strong>
+                    <strong>Tip:</strong>
 
-Complete each phase carefully. The more accurate your information is, the more useful your improvement plans will be.
+                    Complete each phase carefully. The more accurate your information is, the more useful your
+                    improvement plans will be.
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-<div class="modal-footer">
+            <div class="modal-footer">
 
-<button
-type="button"
-class="btn btn-primary"
-data-bs-dismiss="modal">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
 
-Got it!
+                    Got it!
 
-</button>
+                </button>
 
-</div>
+            </div>
 
-</div>
+        </div>
+
+    </div>
 
 </div>
 
-</div>
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    const journeyModal = new bootstrap.Modal(
-        document.getElementById("journeyModal")
-    );
+        const journeyModal = new bootstrap.Modal(
+            document.getElementById("journeyModal")
+        );
 
-    journeyModal.show();
+        journeyModal.show();
 
-});
+    });
 
 </script>
+
 
 {% endblock %}
