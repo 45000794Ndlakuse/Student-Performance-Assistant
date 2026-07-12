@@ -325,19 +325,59 @@ function showConfirmationModal() {
 
         tableRows += `
 
-        <tr>
+    <tr>
 
-            <td>${item.category}</td>
+        <td>${item.category}</td>
 
-            <td>${item.quantity}</td>
+        <td>${item.quantity}</td>
 
-            <td>${item.weight}%</td>
+        <td>${item.weight}%</td>
 
-        </tr>
+    </tr>
 
-        `;
+    `;
 
     });
+
+    // ==========================================
+    // Save Model Before Entering Phase 2
+    // ==========================================
+
+    const confirmContinue =
+        document.getElementById("confirmContinue");
+
+    if (confirmContinue) {
+
+        confirmContinue.addEventListener("click", () => {
+
+            const studentModel = {
+
+                firstName:
+                    document.getElementById("firstName").value,
+
+                surname:
+                    document.getElementById("surname").value,
+
+                studentNumber:
+                    document.getElementById("studentNumber").value,
+
+                module:
+                    document.getElementById("module").value,
+
+                assessments
+
+            };
+
+            localStorage.setItem(
+                "studentModel",
+                JSON.stringify(studentModel)
+            );
+
+            window.location.href = "/phase2";
+
+        });
+
+    }
 
     content.innerHTML = `
 
