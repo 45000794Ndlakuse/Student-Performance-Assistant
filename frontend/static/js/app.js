@@ -446,3 +446,224 @@ function showConfirmationModal() {
     modal.show();
 
 }
+
+// ==========================================
+// Phase 2 - Load Student Model
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const storedModel =
+        localStorage.getItem("studentModel");
+
+    if (!storedModel) {
+
+        return;
+
+    }
+
+    const studentModel = JSON.parse(storedModel);
+
+    // -----------------------------
+    // Populate Student Information
+    // -----------------------------
+
+    const firstName =
+        document.getElementById("phase2FirstName");
+
+    const surname =
+        document.getElementById("phase2Surname");
+
+    const studentNumber =
+        document.getElementById("phase2StudentNumber");
+
+    const module =
+        document.getElementById("phase2Module");
+
+    if (firstName) {
+
+        firstName.value = studentModel.firstName;
+        surname.value = studentModel.surname;
+        studentNumber.value = studentModel.studentNumber;
+        module.value = studentModel.module;
+
+    }
+
+    // -----------------------------
+    // Build Marks Table
+    // -----------------------------
+
+    const tableBody =
+        document.getElementById("marksTableBody");
+
+    if (!tableBody) {
+
+        return;
+
+    }
+
+    tableBody.innerHTML = "";
+
+    studentModel.assessments.forEach(item => {
+
+        for (let i = 1; i <= item.quantity; i++) {
+
+            tableBody.innerHTML += `
+
+            <tr>
+
+                <td>
+
+                    ${item.category}
+                    ${item.quantity > 1 ? i : ""}
+
+                </td>
+
+                <td>
+
+                    ${i === 1 ? item.weight + "%" : ""}
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        class="form-control mark-input"
+                        data-weight="${item.weight / item.quantity}"
+                        min="0"
+                        max="100"
+                        placeholder="0 - 100">
+
+                </td>
+
+            </tr>
+
+            `;
+
+        }
+
+    });
+
+});
+
+// ==========================================
+// Phase 2 - Generate Academic Profile
+// ==========================================
+
+const generateButton =
+    document.getElementById("generateModel");
+
+if (generateButton) {
+
+    generateButton.addEventListener("click", generateAcademicProfile);
+
+}
+
+function generateAcademicProfile() {
+
+    const studentModel =
+        JSON.parse(localStorage.getItem("studentModel"));
+
+    const markInputs =
+        document.querySelectorAll(".mark-input");
+
+    let totalParticipation = 0;
+
+    let completed = 0;
+
+    let remaining = 0;
+
+    let inputIndex = 0;
+
+        studentModel.assessments.forEach(item => {
+
+        const weightPerAssessment =
+            Number(item.weight) / item.quantity;
+
+        for (let i = 0; i < item.quantity; i++) {
+
+            const value =
+                markInputs[inputIndex].value;
+
+            if (value !== "") {
+
+                completed++;
+
+                totalParticipation +=
+                    (Number(value) / 100) *
+                    weightPerAssessment;
+
+            }
+
+            else {
+
+                remaining++;
+
+            }
+
+            inputIndex++;
+
+        }
+
+    });
+
+        let standing = "";
+
+    if (totalParticipation >= 75) {
+
+        standing = "Excellent";
+
+    }
+
+    else if (totalParticipation >= 60) {
+
+        standing = "Good";
+
+    }
+
+    else if (totalParticipation >= 50) {
+
+        standing = "Satisfactory";
+
+    }
+
+    else {
+
+        standing = "At Risk";
+
+    }
+
+        document.getElementById("modelResults").innerHTML = `
+
+        <div class="alert alert-success">
+
+            <h4>Academic Profile</h4>
+
+            <hr>
+
+            <p>
+                <strong>Current Participation Mark:</strong>
+                ${totalParticipation.toFixed(2)}%
+            </p>
+
+            <p>
+                <strong>Academic Standing:</strong>
+                ${standing}
+            </p>
+
+            <p>
+                <strong>Completed Assessments:</strong>
+                ${completed}
+            </p>
+
+            <p>
+                <strong>Remaining Assessments:</strong>
+                ${remaining}
+            </p>
+
+        </div>
+
+    `;
+
+}
