@@ -2,12 +2,444 @@
 
 {% block content %}
 
-<section class="container py-5">
+<div class="container py-5">
 
-    <h1>Phase 3</h1>
+    <!-- ==========================================
+         Page Heading
+    =========================================== -->
 
-    <h3>Improvement Plans</h3>
+    <div class="text-center mb-5">
 
-</section>
+        <h1>Phase 3</h1>
+
+        <h3>Explore Your Improvement Options</h3>
+
+        <p class="text-muted">
+
+            Evaluate different improvement plans to determine the most
+            achievable pathway towards your desired participation mark.
+
+        </p>
+
+    </div>
+
+    <!-- ==========================================
+         Student Summary
+    =========================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4>
+
+                Student Summary
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        First Name
+
+                    </label>
+
+                    <input
+                        id="phase3FirstName"
+                        class="form-control"
+                        readonly>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Surname
+
+                    </label>
+
+                    <input
+                        id="phase3Surname"
+                        class="form-control"
+                        readonly>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Student Number
+
+                    </label>
+
+                    <input
+                        id="phase3StudentNumber"
+                        class="form-control"
+                        readonly>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Module
+
+                    </label>
+
+                    <input
+                        id="phase3Module"
+                        class="form-control"
+                        readonly>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Current Academic Profile
+    =========================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4>
+
+                Current Academic Profile
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <h5>
+
+                        Current Participation Mark
+
+                    </h5>
+
+                    <h2 id="currentParticipation">
+
+                        0%
+
+                    </h2>
+
+                    <div class="progress mt-3">
+
+                        <div
+                            id="participationProgress"
+                            class="progress-bar"
+                            role="progressbar"
+                            style="width:0%;">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <h5>
+
+                        Academic Standing
+
+                    </h5>
+
+                    <span
+                        id="academicStanding"
+                        class="badge bg-secondary fs-6">
+
+                        Not Calculated
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Improvement Goal
+    =========================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4>
+
+                Choose Your Improvement Goal
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <p class="text-muted">
+
+                Select the participation mark you would like to achieve.
+
+            </p>
+
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="targetMark"
+                            value="50"
+                            id="goal50">
+
+                        <label
+                            class="form-check-label"
+                            for="goal50">
+
+                            Pass Comfortably (50%)
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="targetMark"
+                            value="60"
+                            id="goal60">
+
+                        <label
+                            class="form-check-label"
+                            for="goal60">
+
+                            Aim for 60%
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="targetMark"
+                            value="65"
+                            id="goal65">
+
+                        <label
+                            class="form-check-label"
+                            for="goal65">
+
+                            Aim for 65%
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="targetMark"
+                            value="75"
+                            id="goal75">
+
+                        <label
+                            class="form-check-label"
+                            for="goal75">
+
+                            Aim for 75%
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="targetMark"
+                            value="80"
+                            id="goal80">
+
+                        <label
+                            class="form-check-label"
+                            for="goal80">
+
+                            Aim for Distinction (80%)
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="text-center mt-4">
+
+                <button
+                    class="btn btn-success btn-lg"
+                    id="generateImprovementPlan">
+
+                    Generate Improvement Plan
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Recommended Improvement Plan
+    =========================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4>
+
+                Recommended Improvement Plan
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Assessment</th>
+
+                        <th>Current Mark</th>
+
+                        <th>Recommended Mark</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="improvementTableBody">
+
+                    <tr>
+
+                        <td colspan="3" class="text-center text-muted">
+
+                            Generate an improvement plan to view recommendations.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Personalised Advice
+    =========================================== -->
+
+    <div class="card shadow-sm mb-5">
+
+        <div class="card-header">
+
+            <h4>
+
+                Personalised Academic Advice
+
+            </h4>
+
+        </div>
+
+        <div
+            class="card-body"
+            id="academicAdvice">
+
+            <div class="alert alert-info">
+
+                Generate an improvement plan to receive personalised academic recommendations.
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         Continue
+    =========================================== -->
+
+    <div class="text-center">
+
+        <a
+            href="/phase4"
+            class="btn btn-primary btn-lg">
+
+            Continue to Phase 4
+
+        </a>
+
+    </div>
+
+</div>
 
 {% endblock %}
