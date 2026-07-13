@@ -634,6 +634,30 @@ function generateAcademicProfile() {
 
     }
 
+    // ==========================================
+    // Save Academic Profile
+    // ==========================================
+
+    const academicProfile = {
+
+        participationMark: totalParticipation,
+
+        academicStanding: standing,
+
+        completedAssessments: completed,
+
+        remainingAssessments: remaining
+
+    };
+
+    localStorage.setItem(
+
+        "academicProfile",
+
+        JSON.stringify(academicProfile)
+
+    );
+
         document.getElementById("modelResults").innerHTML = `
 
         <div class="alert alert-success">
@@ -665,5 +689,9 @@ function generateAcademicProfile() {
         </div>
 
     `;
+
+    document
+    .getElementById("viewImprovementOptions")
+    .style.display = "inline-block";
 
 }
