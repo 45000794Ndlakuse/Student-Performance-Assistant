@@ -695,3 +695,134 @@ function generateAcademicProfile() {
     .style.display = "inline-block";
 
 }
+
+// ==========================================
+// Phase 3 - Load Academic Profile
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const storedStudent =
+        localStorage.getItem("studentModel");
+
+    const storedProfile =
+        localStorage.getItem("academicProfile");
+
+    if (!storedStudent || !storedProfile) {
+
+        return;
+
+    }
+
+    const student =
+        JSON.parse(storedStudent);
+
+    const profile =
+        JSON.parse(storedProfile);
+
+    // --------------------------------------
+    // Check that we are on Phase 3
+    // --------------------------------------
+
+    const phase3FirstName =
+        document.getElementById("phase3FirstName");
+
+    if (!phase3FirstName) {
+
+        return;
+
+    }
+
+    // --------------------------------------
+    // Populate Student Summary
+    // --------------------------------------
+
+    phase3FirstName.value =
+        student.firstName;
+
+    document.getElementById("phase3Surname").value =
+        student.surname;
+
+    document.getElementById("phase3StudentNumber").value =
+        student.studentNumber;
+
+    document.getElementById("phase3Module").value =
+        student.module;
+
+    // --------------------------------------
+    // Populate Academic Profile
+    // --------------------------------------
+
+    document.getElementById("currentParticipation").innerHTML =
+
+        profile.participationMark.toFixed(2) + "%";
+
+    // --------------------------------------
+    // Academic Standing Badge
+    // --------------------------------------
+
+    const standingBadge =
+        document.getElementById("academicStanding");
+
+    standingBadge.innerHTML =
+        profile.academicStanding;
+
+    // Badge Colour
+
+    standingBadge.classList.remove(
+
+        "bg-secondary",
+        "bg-danger",
+        "bg-warning",
+        "bg-primary",
+        "bg-success"
+
+    );
+
+    switch (profile.academicStanding) {
+
+        case "At Risk":
+
+            standingBadge.classList.add("bg-danger");
+            break;
+
+        case "Borderline":
+
+            standingBadge.classList.add("bg-warning");
+            break;
+
+        case "Satisfactory":
+
+            standingBadge.classList.add("bg-primary");
+            break;
+
+        case "Good":
+
+            standingBadge.classList.add("bg-success");
+            break;
+
+        case "Excellent":
+
+            standingBadge.classList.add("bg-success");
+            break;
+
+        default:
+
+            standingBadge.classList.add("bg-secondary");
+
+    }
+
+    // --------------------------------------
+    // Progress Bar
+    // --------------------------------------
+
+    const progressBar =
+        document.getElementById("participationProgress");
+
+    progressBar.style.width =
+        profile.participationMark + "%";
+
+    progressBar.innerHTML =
+        profile.participationMark.toFixed(1) + "%";
+
+});
