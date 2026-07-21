@@ -767,50 +767,7 @@ document.addEventListener("DOMContentLoaded", () => {
     standingBadge.innerHTML =
         profile.academicStanding;
 
-    // Badge Colour
-
-    standingBadge.classList.remove(
-
-        "bg-secondary",
-        "bg-danger",
-        "bg-warning",
-        "bg-primary",
-        "bg-success"
-
-    );
-
-    switch (profile.academicStanding) {
-
-        case "At Risk":
-
-            standingBadge.classList.add("bg-danger");
-            break;
-
-        case "Borderline":
-
-            standingBadge.classList.add("bg-warning");
-            break;
-
-        case "Satisfactory":
-
-            standingBadge.classList.add("bg-primary");
-            break;
-
-        case "Good":
-
-            standingBadge.classList.add("bg-success");
-            break;
-
-        case "Excellent":
-
-            standingBadge.classList.add("bg-success");
-            break;
-
-        default:
-
-            standingBadge.classList.add("bg-secondary");
-
-    }
+    
 
     // --------------------------------------
     // Progress Bar
@@ -824,5 +781,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     progressBar.innerHTML =
         profile.participationMark.toFixed(1) + "%";
+
+    progressBar.className = "progress-bar";
+
+    if (profile.participationMark >= 75) {
+
+        progressBar.classList.add("bg-success");
+
+    }
+    else if (profile.participationMark >= 50) {
+
+        progressBar.classList.add("bg-warning");
+
+    }
+    else {
+
+        progressBar.classList.add("bg-danger");
+
+    }
 
 });
