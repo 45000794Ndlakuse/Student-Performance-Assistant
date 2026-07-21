@@ -186,158 +186,61 @@
     =========================================== -->
 
     <div class="card shadow-sm mb-4">
-
+    
         <div class="card-header">
-
-            <h4>
-
-                Choose Your Improvement Goal
-
-            </h4>
-
+    
+            <h4>Improvement Options</h4>
+    
         </div>
-
+    
         <div class="card-body">
-
+    
             <p class="text-muted">
-
-                Select the participation mark you would like to achieve.
-
+    
+                The assessments remaining this semester are:
+    
             </p>
-
-            <div class="row">
-
-                <div class="col-md-4 mb-3">
-
-                    <div class="form-check">
-
-                        <input
-                            class="form-check-input"
-                            type="radio"
-                            name="targetMark"
-                            value="50"
-                            id="goal50">
-
-                        <label
-                            class="form-check-label"
-                            for="goal50">
-
-                            Pass Comfortably (50%)
-
-                        </label>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-4 mb-3">
-
-                    <div class="form-check">
-
-                        <input
-                            class="form-check-input"
-                            type="radio"
-                            name="targetMark"
-                            value="60"
-                            id="goal60">
-
-                        <label
-                            class="form-check-label"
-                            for="goal60">
-
-                            Aim for 60%
-
-                        </label>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-4 mb-3">
-
-                    <div class="form-check">
-
-                        <input
-                            class="form-check-input"
-                            type="radio"
-                            name="targetMark"
-                            value="65"
-                            id="goal65">
-
-                        <label
-                            class="form-check-label"
-                            for="goal65">
-
-                            Aim for 65%
-
-                        </label>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-6 mb-3">
-
-                    <div class="form-check">
-
-                        <input
-                            class="form-check-input"
-                            type="radio"
-                            name="targetMark"
-                            value="75"
-                            id="goal75">
-
-                        <label
-                            class="form-check-label"
-                            for="goal75">
-
-                            Aim for 75%
-
-                        </label>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-6 mb-3">
-
-                    <div class="form-check">
-
-                        <input
-                            class="form-check-input"
-                            type="radio"
-                            name="targetMark"
-                            value="80"
-                            id="goal80">
-
-                        <label
-                            class="form-check-label"
-                            for="goal80">
-
-                            Aim for Distinction (80%)
-
-                        </label>
-
-                    </div>
-
-                </div>
-
+    
+            <div id="remainingAssessmentsSummary">
+    
             </div>
-
+    
+            <hr>
+    
+            <p>
+    
+                Your improvement options range from
+    
+                <strong id="minimumImprovement">
+    
+                    0%
+    
+                </strong>
+    
+                to
+    
+                <strong id="maximumImprovement">
+    
+                    0%
+    
+                </strong>
+    
+                on your participation mark.
+    
+            </p>
+    
             <div class="text-center mt-4">
-
-                <button
-                    class="btn btn-success btn-lg"
-                    id="generateImprovementPlan">
-
-                    Generate Improvement Plan
-
+    
+                <button id="showOptions" class="btn btn-primary">
+    
+                    Show Options
+    
                 </button>
-
+    
             </div>
-
+    
         </div>
-
+    
     </div>
 
     <!-- ==========================================
@@ -345,85 +248,27 @@
     =========================================== -->
 
     <div class="card shadow-sm mb-4">
-
+    
         <div class="card-header">
-
-            <h4>
-
-                Recommended Improvement Plan
-
-            </h4>
-
+    
+            <h4>Calculated Improvement Plans</h4>
+    
         </div>
-
-        <div class="card-body">
-
-            <table class="table table-hover">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Assessment</th>
-
-                        <th>Current Mark</th>
-
-                        <th>Recommended Mark</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="improvementTableBody">
-
-                    <tr>
-
-                        <td colspan="3" class="text-center text-muted">
-
-                            Generate an improvement plan to view recommendations.
-
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-    <!-- ==========================================
-         Personalised Advice
-    =========================================== -->
-
-    <div class="card shadow-sm mb-5">
-
-        <div class="card-header">
-
-            <h4>
-
-                Personalised Academic Advice
-
-            </h4>
-
-        </div>
-
-        <div
-            class="card-body"
-            id="academicAdvice">
-
+    
+        <div class="card-body" id="improvementPlans">
+    
             <div class="alert alert-info">
-
-                Generate an improvement plan to receive personalised academic recommendations.
-
+    
+                Click
+                <strong>Show Options</strong>
+                to calculate the available improvement plans.
+    
             </div>
-
+    
         </div>
-
+    
     </div>
-
+    
     <!-- ==========================================
          Continue
     =========================================== -->

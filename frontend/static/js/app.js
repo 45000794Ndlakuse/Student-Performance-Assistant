@@ -576,10 +576,14 @@ function generateAcademicProfile() {
 
     let inputIndex = 0;
 
-        studentModel.assessments.forEach(item => {
+    const remainingAssessmentCounts = {};
+
+    studentModel.assessments.forEach(item => {
 
         const weightPerAssessment =
             Number(item.weight) / item.quantity;
+
+        let remainingForCategory = 0;
 
         for (let i = 0; i < item.quantity; i++) {
 
@@ -600,14 +604,18 @@ function generateAcademicProfile() {
 
                 remaining++;
 
+                remainingForCategory++;
+
             }
 
             inputIndex++;
 
         }
 
-    });
+        remainingAssessmentCounts[item.category] =
+            remainingForCategory;
 
+    });
         let standing = "";
 
     if (totalParticipation >= 75) {
@@ -646,7 +654,9 @@ function generateAcademicProfile() {
 
         completedAssessments: completed,
 
-        remainingAssessments: remaining
+        remainingAssessments: remaining,
+
+        //remainingWeight: remainingWeight
 
     };
 
@@ -655,6 +665,16 @@ function generateAcademicProfile() {
         "academicProfile",
 
         JSON.stringify(academicProfile)
+
+    );
+
+    localStorage.setItem(
+
+        "remainingAssessments",
+
+        JSON.stringify(
+            remainingAssessmentCounts
+        )
 
     );
 
@@ -708,6 +728,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const storedProfile =
         localStorage.getItem("academicProfile");
 
+    //const recommendationTable =
+    //    document.getElementById(
+    //        "recommendationTable"
+    //    );
+
+    //const targets = [
+
+    //    50,
+
+    //    60,
+
+    //    75
+
+    //];
+
+    const remaining =
+    JSON.parse(
+        localStorage.getItem("remainingAssessments")
+    );
+
+const summary =
+    document.getElementById(
+        "remainingAssessmentsSummary"
+    );
+
+if (remaining && summary) {
+
+    summary.innerHTML = "";
+
+    Object.entries(remaining).forEach(([category, count]) => {
+
+        summary.innerHTML += `
+
+            <p>
+
+                <strong>${category}:</strong>
+                ${count}
+
+            </p>
+
+        `;
+
+    });
+
+}
     if (!storedStudent || !storedProfile) {
 
         return;
@@ -732,6 +797,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
 
     }
+
+
 
     // --------------------------------------
     // Populate Student Summary
@@ -800,4 +867,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+    
+
 });
+
