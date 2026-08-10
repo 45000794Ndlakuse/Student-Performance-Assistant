@@ -231,7 +231,7 @@ function attachButtonEvents() {
 // ==========================================
 
 const continueButton =
-document.getElementById("continuePhase2");
+    document.getElementById("continuePhase2");
 
 if (continueButton) {
 
@@ -576,7 +576,11 @@ function generateAcademicProfile() {
 
     let inputIndex = 0;
 
+    let remainingWeight = 0;
+
     const remainingAssessmentCounts = {};
+
+    const remainingAssessmentDetails = [];
 
     studentModel.assessments.forEach(item => {
 
@@ -604,6 +608,8 @@ function generateAcademicProfile() {
 
                 remaining++;
 
+                remainingWeight += weightPerAssessment;
+
                 remainingForCategory++;
 
             }
@@ -615,8 +621,22 @@ function generateAcademicProfile() {
         remainingAssessmentCounts[item.category] =
             remainingForCategory;
 
+        remainingAssessmentDetails.push({
+
+            category: item.category,
+
+            quantity: item.quantity,
+
+            remaining: remainingForCategory,
+
+            weight: Number(item.weight),
+
+            weightPerAssessment: weightPerAssessment
+
+        });
+
     });
-        let standing = "";
+    let standing = "";
 
     if (totalParticipation >= 75) {
 
@@ -656,7 +676,7 @@ function generateAcademicProfile() {
 
         remainingAssessments: remaining,
 
-        //remainingWeight: remainingWeight
+        remainingWeight: remainingWeight
 
     };
 
@@ -678,7 +698,54 @@ function generateAcademicProfile() {
 
     );
 
-        document.getElementById("modelResults").innerHTML = `
+    localStorage.setItem(
+
+        "remainingAssessmentDetails",
+
+        JSON.stringify(
+            remainingAssessmentDetails
+        )
+
+    );
+
+    // ==========================================
+    // Build Individual Remaining Assessment Sessions
+    // ==========================================
+
+    const remainingAssessmentSessions = [];
+
+    remainingAssessmentDetails.forEach(item => {
+
+        for (let i = 1; i <= item.remaining; i++) {
+
+            remainingAssessmentSessions.push({
+
+                category:
+                    item.category,
+
+                assessmentNumber:
+                    i,
+
+                weightPerAssessment:
+                    item.weightPerAssessment
+
+            });
+
+        }
+
+    });
+
+    localStorage.setItem(
+
+        "remainingAssessmentSessions",
+
+        JSON.stringify(
+            remainingAssessmentSessions
+        )
+
+    );
+
+    document.getElementById("modelResults").innerHTML = `
 
         <div class="alert alert-success">
 
@@ -710,11 +777,297 @@ function generateAcademicProfile() {
 
     `;
 
+    // ==========================================
+    // Generate Improvement Scenarios
+    // ==========================================
+
+    // ==========================================
+    // Algorithm 2
+    // Build Participation Scenario Matrix (q)
+    // ==========================================
+
+    const participationScenarioMatrix = [
+
+        {
+
+            totalRemainingAssessments: remaining,
+
+            remainingWeight: remainingWeight,
+
+            assessments: remainingAssessmentDetails
+
+                .filter(item => item.remaining > 0)
+
+                .map(item => ({
+
+                    category: item.category,
+
+                    remaining: item.remaining,
+
+                    weightPerAssessment:
+                        item.weightPerAssessment
+
+                }))
+
+        }
+
+    ];
+
+    localStorage.setItem(
+
+        "participationScenarioMatrix",
+
+        JSON.stringify(
+            participationScenarioMatrix
+        )
+
+    );
+
+    // ==========================================
+    // Algorithm 2
+    // Generate 2^s Participation Scenarios
+    // ==========================================
+
+    const improvementScenarios = [];
+
+    const s =
+        remainingAssessmentSessions.length;
+
+    const totalScenarios =
+        Math.pow(2, s);
+
+    for (
+        let scenarioNumber = 0;
+        scenarioNumber < totalScenarios;
+        scenarioNumber++
+    ) {
+
+        const participationScenario = [];
+
+        for (let i = 0; i < s; i++) {
+
+            const participated =
+                (scenarioNumber & (1 << i)) !== 0;
+
+            participationScenario.push({
+
+                category:
+                    remainingAssessmentSessions[i].category,
+
+                assessmentNumber:
+                    remainingAssessmentSessions[i]
+                        .assessmentNumber,
+
+                weightPerAssessment:
+                    remainingAssessmentSessions[i]
+                        .weightPerAssessment,
+
+                participated:
+                    participated
+
+            });
+
+        }
+
+        improvementScenarios.push({
+
+            scenario:
+                scenarioNumber + 1,
+
+            participation:
+                participationScenario
+
+        });
+
+    }
+
+
+    // ==========================================
+    // Algorithm 2
+    // Evaluate Participation Scenarios
+    // ==========================================
+
+    const evaluatedScenarios = [];
+
+    improvementScenarios.forEach(scenario => {
+
+        let scenarioWeight = 0;
+
+        scenario.participation.forEach(assessment => {
+
+            if (assessment.participated) {
+
+                scenarioWeight +=
+                    Number(
+                        assessment.weightPerAssessment
+                    );
+
+            }
+
+        });
+
+        const improvement =
+            scenarioWeight;
+
+        const targetParticipation =
+            totalParticipation + improvement;
+
+        evaluatedScenarios.push({
+
+            scenario:
+                scenario.scenario,
+
+            participation:
+                scenario.participation,
+
+            scenarioWeight:
+                Number(
+                    scenarioWeight.toFixed(2)
+                ),
+
+            improvement:
+                Number(
+                    improvement.toFixed(2)
+                ),
+
+            targetParticipation:
+                Number(
+                    targetParticipation.toFixed(2)
+                )
+
+        });
+
+    });
+
+
+    // ==========================================
+    // Save Algorithm 2 Results
+    // ==========================================
+
+    localStorage.setItem(
+
+        "improvementScenarios",
+
+        JSON.stringify(
+            evaluatedScenarios
+        )
+
+    );
+
+    // ==========================================
+// Algorithm 2
+// Remove Duplicate Scenario Outcomes
+// ==========================================
+
+const uniqueScenarios = [];
+
+const scenarioKeys = new Set();
+
+evaluatedScenarios.forEach(scenario => {
+
+    const key =
+        scenario.scenarioWeight.toFixed(2);
+
+    if (!scenarioKeys.has(key)) {
+
+        scenarioKeys.add(key);
+
+        uniqueScenarios.push(scenario);
+
+    }
+
+});
+
+localStorage.setItem(
+
+    "uniqueImprovementScenarios",
+
+    JSON.stringify(
+        uniqueScenarios
+    )
+
+);
+
+// ==========================================
+// Algorithm 2
+// Calculate Required Marks for Scenarios
+// ==========================================
+
+const scenariosWithRequiredMarks = [];
+
+uniqueScenarios.forEach(scenario => {
+
+    // Scenario with no participating
+    // remaining assessments
+    if (scenario.scenarioWeight === 0) {
+
+        scenariosWithRequiredMarks.push({
+
+            ...scenario,
+
+            requiredMark: null
+
+        });
+
+        return;
+
+    }
+
+    const requiredMark =
+
+        (
+            scenario.improvement /
+            scenario.scenarioWeight
+        ) * 100;
+
+    scenariosWithRequiredMarks.push({
+
+        ...scenario,
+
+        requiredMark:
+            Number(
+                requiredMark.toFixed(2)
+            )
+
+    });
+
+});
+
+localStorage.setItem(
+
+    "scenariosWithRequiredMarks",
+
+    JSON.stringify(
+        scenariosWithRequiredMarks
+    )
+
+);
+
+
+    // ==========================================
+    // Show Improvement Options
+    // ==========================================
+
     document
-    .getElementById("viewImprovementOptions")
-    .style.display = "inline-block";
+        .getElementById("viewImprovementOptions")
+        .style.display = "inline-block";
+
+    //localStorage.setItem(
+
+    //    "improvementScenarios",
+
+    //    JSON.stringify(
+    //        improvementScenarios
+    //    )
+
+    //);
+
 
 }
+
+
+
+
 
 // ==========================================
 // Phase 3 - Load Academic Profile
@@ -727,6 +1080,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const storedProfile =
         localStorage.getItem("academicProfile");
+
+
 
     //const recommendationTable =
     //    document.getElementById(
@@ -744,22 +1099,22 @@ document.addEventListener("DOMContentLoaded", () => {
     //];
 
     const remaining =
-    JSON.parse(
-        localStorage.getItem("remainingAssessments")
-    );
+        JSON.parse(
+            localStorage.getItem("remainingAssessments")
+        );
 
-const summary =
-    document.getElementById(
-        "remainingAssessmentsSummary"
-    );
+    const summary =
+        document.getElementById(
+            "remainingAssessmentsSummary"
+        );
 
-if (remaining && summary) {
+    if (remaining && summary) {
 
-    summary.innerHTML = "";
+        summary.innerHTML = "";
 
-    Object.entries(remaining).forEach(([category, count]) => {
+        Object.entries(remaining).forEach(([category, count]) => {
 
-        summary.innerHTML += `
+            summary.innerHTML += `
 
             <p>
 
@@ -770,9 +1125,9 @@ if (remaining && summary) {
 
         `;
 
-    });
+        });
 
-}
+    }
     if (!storedStudent || !storedProfile) {
 
         return;
@@ -834,7 +1189,7 @@ if (remaining && summary) {
     standingBadge.innerHTML =
         profile.academicStanding;
 
-    
+
 
     // --------------------------------------
     // Progress Bar
@@ -867,7 +1222,70 @@ if (remaining && summary) {
 
     }
 
-    
+    //document.getElementById("minimumImprovement").innerHTML = "0%";
+
+    //document.getElementById("maximumImprovement").innerHTML =
+    //   profile.remainingWeight.toFixed(2) + "%";
+
+    const scenarios =
+        JSON.parse(
+            localStorage.getItem("improvementScenarios")
+        );
+
+    console.log(scenarios);
+
+    document.getElementById("minimumImprovement").innerHTML =
+        scenarios[0].improvement.toFixed(2) + "%";
+
+    document.getElementById("maximumImprovement").innerHTML =
+        scenarios[scenarios.length - 1].improvement.toFixed(2) + "%";
+
+
 
 });
 
+// ==========================================
+// Show Improvement Options
+// ==========================================
+
+const showOptions =
+    document.getElementById("showOptions");
+
+if (showOptions) {
+
+    showOptions.addEventListener("click", () => {
+
+        generateImprovementOptions();
+
+    });
+
+}
+
+function generateImprovementOptions() {
+
+    //const scenarios =
+
+    //    JSON.parse(localStorage.getItem(
+    //        "improvementScenarios"
+    //    )
+
+    //);
+
+    //const plansContainer =
+
+    //    document.getElementById(
+    //        "improvementPlans"
+    //    );
+
+    //if (!scenarios || !plansContainer) {
+
+    //    return;
+
+    //}
+    JSON.parse(localStorage.getItem("studentModel"))
+
+
+
+    console.log(scenarios);
+
+}
