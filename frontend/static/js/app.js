@@ -2878,45 +2878,57 @@ function populatePhase4Scenarios(
 }
 
 // ======================================
-// CSV EXPORT FUNCTION
+// CSV EXPORT
 // ======================================
 
 function saveStudentDataAsCSV() {
 
     // --------------------------------------
-    // Load existing stored data
-    // --------------------------------------
-
-    const storedStudent =
-        localStorage.getItem("studentModel");
-
-    const storedFactors =
-        localStorage.getItem("factorPerformance");
-
-
-    // --------------------------------------
-    // Validate stored data
-    // --------------------------------------
-
-    if (!storedStudent || !storedFactors) {
-
-        alert(
-            "Student data could not be found."
-        );
-
-        return;
-    }
-
-
-    // --------------------------------------
-    // Read stored data
+    // Load required data
     // --------------------------------------
 
     const student =
-        JSON.parse(storedStudent);
+        JSON.parse(
+            localStorage.getItem("studentModel")
+        );
 
     const factorPerformance =
-        JSON.parse(storedFactors);
+        JSON.parse(
+            localStorage.getItem("factorPerformance")
+        );
+
+    const remainingAssessmentSessions =
+        JSON.parse(
+            localStorage.getItem(
+                "remainingAssessmentSessions"
+            )
+        );
+
+
+    // --------------------------------------
+    // Validate required data
+    // --------------------------------------
+
+    if (!student) {
+        console.error(
+            "studentModel not found in localStorage."
+        );
+        return;
+    }
+
+    if (!Array.isArray(factorPerformance)) {
+        console.error(
+            "factorPerformance not found or invalid."
+        );
+        return;
+    }
+
+    if (!Array.isArray(remainingAssessmentSessions)) {
+        console.error(
+            "remainingAssessmentSessions not found or invalid."
+        );
+        return;
+    }
 
 
     // --------------------------------------
@@ -2944,164 +2956,122 @@ function saveStudentDataAsCSV() {
     rows.push([
         student.firstName || "",
         student.surname || "",
-        student.studentNumber || "",
+        student.studentNumber ||
+            student.studentNum ||
+            "",
         student.module || ""
     ]);
 
+
+    // Blank line
     rows.push([]);
 
 
     // ======================================
-    // ASSESSMENT FRAMEWORK
+    // ASSESSMENT FRAMEWORK AND MARKS
     // ======================================
 
     rows.push([
-        "ASSESSMENT FRAMEWORK"
+        "ASSESSMENT FRAMEWORK AND MARKS"
     ]);
 
     rows.push([
-        "Assessment Category",
+        "Assessment",
         "Number of Assessments",
-        "Total Weight"
+        "Total Weight",
+        "Marks"
     ]);
 
+
+    // --------------------------------------
+    // Existing assessments
+    // --------------------------------------
 
     factorPerformance.forEach(
         factor => {
 
-            rows.push([
-                factor.category || "",
+            const category =
+                factor.category;
 
-                factor.totalAssessments ?? "",
+            const totalAssessments =
+                Number(
+                    factor.totalAssessments || 0
+                );
 
-                factor.totalWeight !== undefined
-                    ? factor.totalWeight + "%"
-                    : ""
-            ]);
+            const totalWeight =
+                factor.weight !== undefined &&
+                factor.weight !== null &&
+                factor.weight !== ""
+                    ? factor.weight
+                    : "-";
 
-        }
-    );
+            const completedAssessments =
+                Number(
+                    factor.completedAssessments || 0
+                );
+
+            /*
+             * Existing marks come from the
+             * currentAverage stored in
+             * factorPerformance.
+             *
+             * No calculation is performed here.
+             * We simply transfer the stored value.
+             */
+
+            const existingMark =
+                completedAssessments > 0
+                    ? factor.currentAverage
+                    : null;
 
 
-    rows.push([]);
+            // ----------------------------------
+            // Existing assessment rows
+            // ----------------------------------
 
-
-    // ======================================
-    // EXISTING ASSESSMENT MARKS
-    // ======================================
-
-    rows.push([
-        "EXISTING ASSESSMENT MARKS"
-    ]);
-
-    rows.push([
-        "Assessment",
-        "Weight",
-        "Existing Mark"
-    ]);
-
-
-    factorPerformance.forEach(
-        factor => {
-
-            if (
-                !Array.isArray(
-                    factor.assessments
-                )
+            for (
+                let i = 1;
+                i <= completedAssessments;
+                i++
             ) {
 
-                return;
+                rows.push([
+                    `${category} ${i}`,
+                    totalAssessments,
+                    totalWeight,
+                    existingMark !== null &&
+                    existingMark !== undefined &&
+                    existingMark !== ""
+                        ? existingMark
+                        : "-"
+                ]);
+
             }
 
 
-            factor.assessments.forEach(
-                (assessment, index) => {
+            // ----------------------------------
+            // Remaining assessment rows
+            // ----------------------------------
 
-                    // Only export assessments
-                    // that already have a mark.
-
-                    if (
-                        assessment.mark === undefined ||
-                        assessment.mark === null ||
-                        assessment.mark === ""
-                    ) {
-
-                        return;
-                    }
+            const remainingSessions =
+                remainingAssessmentSessions.filter(
+                    session =>
+                        session.category === category
+                );
 
 
-                    rows.push([
-                        `${factor.category} ${index + 1}`,
+            remainingSessions.forEach(
+                session => {
 
-                        assessment.weight !== undefined
-                            ? assessment.weight + "%"
-                            : "",
-
-                        assessment.mark + "%"
-                    ]);
-
-                }
-            );
-
-        }
-    );
-
-
-    rows.push([]);
-
-
-    // ======================================
-    // NON-EXISTING ASSESSMENT MARKS
-    // ======================================
-
-    rows.push([
-        "NON-EXISTING ASSESSMENT MARKS"
-    ]);
-
-    rows.push([
-        "Assessment",
-        "Weight",
-        "Existing Mark"
-    ]);
-
-
-    factorPerformance.forEach(
-        factor => {
-
-            if (
-                !Array.isArray(
-                    factor.assessments
-                )
-            ) {
-
-                return;
-            }
-
-
-            factor.assessments.forEach(
-                (assessment, index) => {
-
-                    // Only export assessments
-                    // without a mark.
-
-                    if (
-                        assessment.mark !== undefined &&
-                        assessment.mark !== null &&
-                        assessment.mark !== ""
-                    ) {
-
-                        return;
-                    }
-
+                    const assessmentNumber =
+                        session.assessmentNumber ||
+                        session.number;
 
                     rows.push([
-                        `${factor.category} ${index + 1}`,
-
-                        assessment.weight !== undefined
-                            ? assessment.weight + "%"
-                            : "",
-
-                        "—"
+                        `${category} ${assessmentNumber}`,
+                        totalAssessments,
+                        totalWeight,
+                        "-"
                     ]);
 
                 }
@@ -3119,47 +3089,66 @@ function saveStudentDataAsCSV() {
         rows
             .map(row =>
                 row
-                    .map(value =>
-                        csvEscape(value)
-                    )
+                    .map(value => {
+
+                        if (
+                            value === null ||
+                            value === undefined
+                        ) {
+                            return "";
+                        }
+
+                        const text =
+                            String(value);
+
+                        /*
+                         * Escape CSV values containing
+                         * commas, quotes, or new lines.
+                         */
+
+                        if (
+                            text.includes(",") ||
+                            text.includes('"') ||
+                            text.includes("\n")
+                        ) {
+
+                            return `"${text.replace(
+                                /"/g,
+                                '""'
+                            )}"`;
+
+                        }
+
+                        return text;
+
+                    })
                     .join(",")
             )
-            .join("\r\n");
+            .join("\n");
 
 
     // ======================================
-    // Create CSV file
+    // Download CSV
     // ======================================
 
     const blob =
         new Blob(
-            [
-                "\uFEFF",
-                csvContent
-            ],
+            [csvContent],
             {
-                type:
-                    "text/csv;charset=utf-8;"
+                type: "text/csv;charset=utf-8;"
             }
         );
-
 
     const url =
         URL.createObjectURL(blob);
 
-
     const link =
         document.createElement("a");
 
-
     link.href = url;
 
-
     link.download =
-        `Student_Performance_${
-            student.studentNumber || "Data"
-        }.csv`;
-
+        "NWU_student_performance_summary.csv";
 
     document.body.appendChild(link);
 
@@ -3171,43 +3160,29 @@ function saveStudentDataAsCSV() {
 
 
     console.log(
-        "Student data CSV exported successfully."
+        "Student performance CSV exported successfully."
     );
+
+    const csvDownloadMessage =
+    document.getElementById(
+        "csvDownloadMessage"
+    );
+
+if (csvDownloadMessage) {
+
+    csvDownloadMessage.textContent =
+        "CSV file downloaded successfully: NWU_student_performance_summary.csv";
+
+    csvDownloadMessage.classList.remove(
+        "d-none"
+    );
+
+    setTimeout(() => {
+
+        csvDownloadMessage.classList.add(
+            "d-none"
+        );
+
+    }, 5000);
 }
-
-
-// ======================================
-// CSV VALUE ESCAPING
-// ======================================
-
-function csvEscape(value) {
-
-    if (
-        value === null ||
-        value === undefined
-    ) {
-
-        return "";
-    }
-
-
-    const stringValue =
-        String(value);
-
-
-    if (
-        stringValue.includes(",") ||
-        stringValue.includes('"') ||
-        stringValue.includes("\n") ||
-        stringValue.includes("\r")
-    ) {
-
-        return `"${stringValue.replace(
-            /"/g,
-            '""'
-        )}"`;
-    }
-
-
-    return stringValue;
 }
