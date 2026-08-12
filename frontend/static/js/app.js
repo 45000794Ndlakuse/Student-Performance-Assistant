@@ -1696,6 +1696,11 @@ console.log(
     feasibleScenarios.length
 );
 
+localStorage.setItem(
+    "feasibleScenarios",
+    JSON.stringify(feasibleScenarios)
+);
+
     // ------------------------------------------
     // Number of remaining assessments
     // ------------------------------------------
@@ -1897,4 +1902,1312 @@ if (showOptionsButton) {
         generateImprovementOptions
     );
 
+}
+
+// ==========================================
+// Phase 4 - Student Performance Summary
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // --------------------------------------
+    // Check that we are on Phase 4
+    // --------------------------------------
+
+    const phase4FirstName =
+        document.getElementById("phase4FirstName");
+
+    if (!phase4FirstName) {
+        return;
+    }
+
+    console.log("=================================");
+    console.log("Phase 4 - Student Performance Summary");
+    console.log("=================================");
+
+
+    // ======================================
+    // LOAD STUDENT MODEL
+    // ======================================
+
+    const storedStudent =
+        localStorage.getItem("studentModel");
+
+    if (!storedStudent) {
+
+        console.error(
+            "studentModel not found in localStorage"
+        );
+
+        return;
+    }
+
+    const student =
+        JSON.parse(storedStudent);
+
+    console.log(
+        "Student Model:",
+        student
+    );
+
+
+    // ======================================
+    // STUDENT INFORMATION
+    // ======================================
+
+    document.getElementById(
+        "phase4FirstName"
+    ).value =
+        student.firstName || "";
+
+    document.getElementById(
+        "phase4Surname"
+    ).value =
+        student.surname || "";
+
+    document.getElementById(
+        "phase4StudentNumber"
+    ).value =
+        student.studentNumber || "";
+
+    document.getElementById(
+        "phase4Module"
+    ).value =
+        student.module || "";
+
+
+    // ======================================
+    // LOAD ACADEMIC PROFILE
+    // ======================================
+
+    const storedProfile =
+        localStorage.getItem("academicProfile");
+
+    if (!storedProfile) {
+
+        console.error(
+            "academicProfile not found in localStorage"
+        );
+
+        return;
+    }
+
+    const academicProfile =
+        JSON.parse(storedProfile);
+
+    console.log(
+        "Academic Profile:",
+        academicProfile
+    );
+
+
+    // ======================================
+    // ACADEMIC PROFILE
+    // ======================================
+
+    const participation =
+        Number(
+            academicProfile.participationMark || 0
+        );
+
+    const participationElement =
+        document.getElementById(
+            "phase4ParticipationMark"
+        );
+
+    if (participationElement) {
+
+        participationElement.textContent =
+            participation.toFixed(2) + "%";
+    }
+
+
+    const standingElement =
+        document.getElementById(
+            "phase4AcademicStanding"
+        );
+
+    if (standingElement) {
+
+        standingElement.textContent =
+            academicProfile.academicStanding ||
+            "Not Calculated";
+    }
+
+
+    // ======================================
+    // PARTICIPATION PROGRESS
+    // ======================================
+
+    const progressBar =
+        document.getElementById(
+            "phase4ParticipationProgress"
+        );
+
+    if (progressBar) {
+
+        const progress =
+            Math.min(
+                Math.max(participation, 0),
+                100
+            );
+
+        progressBar.style.width =
+            progress + "%";
+
+        progressBar.textContent =
+            participation.toFixed(1) + "%";
+    }
+
+
+    // ======================================
+    // LOAD FACTOR PERFORMANCE
+    // ======================================
+
+    const storedFactors =
+        localStorage.getItem("factorPerformance");
+
+    if (!storedFactors) {
+
+        console.error(
+            "factorPerformance not found in localStorage"
+        );
+
+        return;
+    }
+
+    const factorPerformance =
+        JSON.parse(storedFactors);
+
+    console.log(
+        "Factor Performance:",
+        factorPerformance
+    );
+
+
+    // ======================================
+    // COMPLETED / REMAINING ASSESSMENTS
+    // ======================================
+
+    let completedAssessments = 0;
+    let remainingAssessments = 0;
+
+    factorPerformance.forEach(factor => {
+
+        completedAssessments +=
+            Number(
+                factor.completedAssessments || 0
+            );
+
+        remainingAssessments +=
+            Number(
+                factor.remainingAssessments || 0
+            );
+
+    });
+
+
+    const completedElement =
+        document.getElementById(
+            "phase4CompletedAssessments"
+        );
+
+    if (completedElement) {
+
+        completedElement.textContent =
+            completedAssessments;
+    }
+
+
+    const remainingElement =
+        document.getElementById(
+            "phase4RemainingAssessments"
+        );
+
+    if (remainingElement) {
+
+        remainingElement.textContent =
+            remainingAssessments;
+    }
+
+
+    // ======================================
+    // ASSESSMENT FRAMEWORK
+    // ======================================
+    //
+    // IMPORTANT:
+    // The assessment framework belongs to
+    // studentModel.assessments.
+    //
+    // factorPerformance contains derived
+    // performance information, not the original
+    // assessment framework.
+    // ======================================
+
+    const frameworkTable =
+        document.getElementById(
+            "assessmentFrameworkTable"
+        );
+
+    if (frameworkTable) {
+
+        frameworkTable.innerHTML = "";
+
+        const assessments =
+            student.assessments || [];
+
+        if (assessments.length === 0) {
+
+            frameworkTable.innerHTML = `
+                <tr>
+                    <td
+                        colspan="3"
+                        class="text-center text-muted">
+                        No assessment framework available.
+                    </td>
+                </tr>
+            `;
+
+        }
+        else {
+
+            assessments.forEach(
+                assessment => {
+
+                    const row =
+                        document.createElement("tr");
+
+
+                    // Assessment category
+                    const categoryCell =
+                        document.createElement("td");
+
+                    categoryCell.textContent =
+                        assessment.category || "—";
+
+
+                    // Number of assessments
+                    const numberCell =
+                        document.createElement("td");
+
+                    numberCell.textContent =
+                        assessment.quantity ?? "—";
+
+
+                    // Total weight
+                    const weightCell =
+                        document.createElement("td");
+
+                    const weight =
+                        Number(
+                            assessment.weight
+                        );
+
+                    weightCell.textContent =
+                        Number.isFinite(weight)
+                            ? weight + "%"
+                            : "—";
+
+
+                    row.appendChild(
+                        categoryCell
+                    );
+
+                    row.appendChild(
+                        numberCell
+                    );
+
+                    row.appendChild(
+                        weightCell
+                    );
+
+                    frameworkTable.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        }
+
+    }
+
+
+    // ======================================
+    // EXISTING ASSESSMENT MARKS
+    // ======================================
+    //
+    // factorPerformance currently contains:
+    //
+    // category
+    // totalAssessments
+    // completedAssessments
+    // remainingAssessments
+    // currentAverage
+    // weight
+    // weightPerAssessment
+    //
+    // It does NOT contain individual
+    // assessment records.
+    //
+    // Therefore we use the available
+    // category-level performance data.
+    // ======================================
+
+    const existingMarksTable =
+        document.getElementById(
+            "existingMarksTable"
+        );
+
+    if (existingMarksTable) {
+
+        existingMarksTable.innerHTML = "";
+
+        let rowsAdded = 0;
+
+        factorPerformance.forEach(
+            factor => {
+
+                const completed =
+                    Number(
+                        factor.completedAssessments || 0
+                    );
+
+                const total =
+                    Number(
+                        factor.totalAssessments || 0
+                    );
+
+                const weightPerAssessment =
+                    Number(
+                        factor.weightPerAssessment || 0
+                    );
+
+                const currentAverage =
+                    Number(
+                        factor.currentAverage
+                    );
+
+
+                // ----------------------------------
+                // Completed assessments
+                // ----------------------------------
+
+                if (completed > 0) {
+
+                    /*
+                     * If there is only one completed
+                     * assessment, the category average
+                     * is also that assessment's mark.
+                     */
+
+                    if (completed === 1) {
+
+                        const row =
+                            document.createElement("tr");
+
+
+                        const assessmentCell =
+                            document.createElement("td");
+
+                        assessmentCell.textContent =
+                            `${factor.category} 1`;
+
+
+                        const weightCell =
+                            document.createElement("td");
+
+                        weightCell.textContent =
+                            Number.isFinite(
+                                weightPerAssessment
+                            )
+                                ? weightPerAssessment + "%"
+                                : "—";
+
+
+                        const markCell =
+                            document.createElement("td");
+
+
+                        if (
+                            Number.isFinite(
+                                currentAverage
+                            )
+                        ) {
+
+                            markCell.textContent =
+                                currentAverage + "%";
+
+                        }
+                        else {
+
+                            markCell.textContent =
+                                "—";
+                        }
+
+
+                        row.appendChild(
+                            assessmentCell
+                        );
+
+                        row.appendChild(
+                            weightCell
+                        );
+
+                        row.appendChild(
+                            markCell
+                        );
+
+                        existingMarksTable.appendChild(
+                            row
+                        );
+
+                        rowsAdded++;
+
+                    }
+
+                    /*
+                     * If multiple assessments have been
+                     * completed, we do not pretend that the
+                     * category average represents every
+                     * individual mark.
+                     *
+                     * Instead, display the category average.
+                     */
+
+                    else {
+
+                        const row =
+                            document.createElement("tr");
+
+
+                        const assessmentCell =
+                            document.createElement("td");
+
+                        assessmentCell.textContent =
+                            `${factor.category} (${completed} completed)`;
+
+
+                        const weightCell =
+                            document.createElement("td");
+
+                        weightCell.textContent =
+                            Number.isFinite(
+                                weightPerAssessment
+                            )
+                                ? weightPerAssessment + "%"
+                                : "—";
+
+
+                        const markCell =
+                            document.createElement("td");
+
+                        markCell.textContent =
+                            Number.isFinite(
+                                currentAverage
+                            )
+                                ? currentAverage + "% average"
+                                : "—";
+
+
+                        row.appendChild(
+                            assessmentCell
+                        );
+
+                        row.appendChild(
+                            weightCell
+                        );
+
+                        row.appendChild(
+                            markCell
+                        );
+
+                        existingMarksTable.appendChild(
+                            row
+                        );
+
+                        rowsAdded++;
+
+                    }
+
+                }
+
+
+                // ----------------------------------
+                // Remaining assessments
+                // ----------------------------------
+
+                const remaining =
+                    Number(
+                        factor.remainingAssessments || 0
+                    );
+
+                if (remaining > 0) {
+
+                    for (
+                        let i = 1;
+                        i <= remaining;
+                        i++
+                    ) {
+
+                        const row =
+                            document.createElement("tr");
+
+
+                        const assessmentCell =
+                            document.createElement("td");
+
+                        assessmentCell.textContent =
+                            `${factor.category} — Remaining`;
+
+
+                        const weightCell =
+                            document.createElement("td");
+
+                        weightCell.textContent =
+                            Number.isFinite(
+                                weightPerAssessment
+                            )
+                                ? weightPerAssessment + "%"
+                                : "—";
+
+
+                        const markCell =
+                            document.createElement("td");
+
+                        markCell.textContent =
+                            "—";
+
+
+                        row.appendChild(
+                            assessmentCell
+                        );
+
+                        row.appendChild(
+                            weightCell
+                        );
+
+                        row.appendChild(
+                            markCell
+                        );
+
+                        existingMarksTable.appendChild(
+                            row
+                        );
+
+                        rowsAdded++;
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        if (rowsAdded === 0) {
+
+            existingMarksTable.innerHTML = `
+                <tr>
+                    <td
+                        colspan="3"
+                        class="text-center text-muted">
+                        No assessment marks available.
+                    </td>
+                </tr>
+            `;
+        }
+
+    }
+
+
+    // --------------------------------------
+// Feasible Improvement Scenarios
+// --------------------------------------
+
+const storedFeasibleScenarios =
+    localStorage.getItem(
+        "feasibleScenarios"
+    );
+
+console.log(
+    "Feasible Scenarios:",
+    storedFeasibleScenarios
+);
+
+if (storedFeasibleScenarios) {
+
+    const feasibleScenarios =
+        JSON.parse(
+            storedFeasibleScenarios
+        );
+
+    console.log(
+        "Phase 4 - Feasible Scenarios:",
+        feasibleScenarios
+    );
+
+    populatePhase4Scenarios(
+        feasibleScenarios
+    );
+
+}
+
+
+    // ======================================
+    // CSV EXPORT
+    // ======================================
+
+    const saveCsvButton =
+        document.getElementById(
+            "saveCsv"
+        );
+
+    if (saveCsvButton) {
+
+        saveCsvButton.addEventListener(
+            "click",
+            saveStudentDataAsCSV
+        );
+
+    }
+
+
+    console.log(
+        "Phase 4 loaded successfully."
+    );
+
+});
+
+
+// ==========================================
+// Phase 4 - Populate Improvement Scenarios
+// ==========================================
+
+function populatePhase4Scenarios(
+    feasibleScenarios
+) {
+
+    const scenarioTable =
+        document.getElementById(
+            "phase4ScenarioTable"
+        );
+
+    const targetImprovementElement =
+        document.getElementById(
+            "phase4TargetImprovement"
+        );
+
+    const targetParticipationElement =
+        document.getElementById(
+            "phase4TargetParticipation"
+        );
+
+
+    if (!scenarioTable) {
+
+        console.error(
+            "phase4ScenarioTable not found."
+        );
+
+        return;
+    }
+
+
+    scenarioTable.innerHTML = "";
+
+
+    // --------------------------------------
+    // No feasible scenarios
+    // --------------------------------------
+
+    if (
+        !Array.isArray(feasibleScenarios) ||
+        feasibleScenarios.length === 0
+    ) {
+
+        scenarioTable.innerHTML = `
+            <tr>
+                <td
+                    colspan="4"
+                    class="text-center text-muted">
+
+                    No feasible improvement scenarios
+                    are currently available.
+
+                </td>
+            </tr>
+        `;
+
+        if (targetImprovementElement) {
+            targetImprovementElement.textContent = "—";
+        }
+
+        if (targetParticipationElement) {
+            targetParticipationElement.textContent = "—";
+        }
+
+        return;
+    }
+
+
+    // --------------------------------------
+    // Load the SAME remaining assessments
+    // used by Phase 3
+    // --------------------------------------
+
+    const storedSessions =
+        localStorage.getItem(
+            "remainingAssessmentSessions"
+        );
+
+
+    const remainingAssessmentSessions =
+        storedSessions
+            ? JSON.parse(storedSessions)
+            : [];
+
+
+    console.log(
+        "Phase 4 - Remaining Assessment Sessions:",
+        remainingAssessmentSessions
+    );
+
+
+    // --------------------------------------
+    // Target information
+    // --------------------------------------
+
+    const firstScenario =
+        feasibleScenarios[0];
+
+
+    const targetImprovement =
+        Number(
+            firstScenario.targetImprovement
+        );
+
+
+    const targetParticipation =
+        Number(
+            firstScenario.targetParticipation
+        );
+
+
+    if (targetImprovementElement) {
+
+        targetImprovementElement.textContent =
+            Number.isFinite(targetImprovement)
+                ? "+" + targetImprovement + "%"
+                : "—";
+    }
+
+
+    if (targetParticipationElement) {
+
+        targetParticipationElement.textContent =
+            Number.isFinite(targetParticipation)
+                ? targetParticipation.toFixed(1) + "%"
+                : "—";
+    }
+
+
+    // --------------------------------------
+    // Render feasible scenarios
+    // --------------------------------------
+
+    feasibleScenarios.forEach(
+        scenario => {
+
+            const requiredScores =
+                Array.isArray(
+                    scenario.requiredScores
+                )
+                    ? scenario.requiredScores
+                    : [];
+
+
+            requiredScores.forEach(
+                (requiredScore, index) => {
+
+                    /*
+                     * IMPORTANT:
+                     *
+                     * null means that this assessment
+                     * does not require a specific mark
+                     * for this scenario.
+                     *
+                     * We therefore do NOT display a row
+                     * for null values.
+                     */
+
+                    if (
+                        requiredScore === null ||
+                        requiredScore === undefined
+                    ) {
+
+                        return;
+                    }
+
+
+                    const assessment =
+                        remainingAssessmentSessions[index];
+
+
+                    if (!assessment) {
+
+                        console.warn(
+                            "No matching assessment found for required score:",
+                            {
+                                scenario:
+                                    scenario.scenario,
+
+                                index:
+                                    index,
+
+                                requiredScore:
+                                    requiredScore
+                            }
+                        );
+
+                        return;
+                    }
+
+
+                    // ----------------------------------
+                    // Create row
+                    // ----------------------------------
+
+                    const row =
+                        document.createElement("tr");
+
+
+                    // ----------------------------------
+                    // Scenario
+                    // ----------------------------------
+
+                    const scenarioCell =
+                        document.createElement("td");
+
+                    scenarioCell.textContent =
+                        `Scenario ${scenario.scenario}`;
+
+
+                    // ----------------------------------
+                    // Assessment Category
+                    // ----------------------------------
+
+                    const categoryCell =
+                        document.createElement("td");
+
+
+                    const assessmentNumber =
+                        assessment.assessmentNumber;
+
+
+                    categoryCell.textContent =
+                        assessmentNumber
+                            ? `${assessment.category} ${assessmentNumber}`
+                            : assessment.category;
+
+
+                    // ----------------------------------
+                    // Required Mark
+                    // ----------------------------------
+
+                    const requiredMarkCell =
+                        document.createElement("td");
+
+
+                    requiredMarkCell.textContent =
+                        Number(
+                            requiredScore
+                        ).toFixed(1) + "%";
+
+
+                    // ----------------------------------
+                    // Target Participation
+                    // ----------------------------------
+
+                    const targetCell =
+                        document.createElement("td");
+
+
+                    targetCell.textContent =
+                        Number.isFinite(
+                            Number(
+                                scenario.targetParticipation
+                            )
+                        )
+                            ? Number(
+                                scenario.targetParticipation
+                            ).toFixed(1) + "%"
+                            : "—";
+
+
+                    // ----------------------------------
+                    // Add cells
+                    // ----------------------------------
+
+                    row.appendChild(
+                        scenarioCell
+                    );
+
+                    row.appendChild(
+                        categoryCell
+                    );
+
+                    row.appendChild(
+                        requiredMarkCell
+                    );
+
+                    row.appendChild(
+                        targetCell
+                    );
+
+
+                    scenarioTable.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        }
+    );
+}
+
+// ======================================
+// CSV EXPORT FUNCTION
+// ======================================
+
+function saveStudentDataAsCSV() {
+
+    // --------------------------------------
+    // Load existing stored data
+    // --------------------------------------
+
+    const storedStudent =
+        localStorage.getItem("studentModel");
+
+    const storedFactors =
+        localStorage.getItem("factorPerformance");
+
+
+    // --------------------------------------
+    // Validate stored data
+    // --------------------------------------
+
+    if (!storedStudent || !storedFactors) {
+
+        alert(
+            "Student data could not be found."
+        );
+
+        return;
+    }
+
+
+    // --------------------------------------
+    // Read stored data
+    // --------------------------------------
+
+    const student =
+        JSON.parse(storedStudent);
+
+    const factorPerformance =
+        JSON.parse(storedFactors);
+
+
+    // --------------------------------------
+    // CSV rows
+    // --------------------------------------
+
+    const rows = [];
+
+
+    // ======================================
+    // STUDENT INFORMATION
+    // ======================================
+
+    rows.push([
+        "STUDENT INFORMATION"
+    ]);
+
+    rows.push([
+        "First Name",
+        "Surname",
+        "Student Number",
+        "Module"
+    ]);
+
+    rows.push([
+        student.firstName || "",
+        student.surname || "",
+        student.studentNumber || "",
+        student.module || ""
+    ]);
+
+    rows.push([]);
+
+
+    // ======================================
+    // ASSESSMENT FRAMEWORK
+    // ======================================
+
+    rows.push([
+        "ASSESSMENT FRAMEWORK"
+    ]);
+
+    rows.push([
+        "Assessment Category",
+        "Number of Assessments",
+        "Total Weight"
+    ]);
+
+
+    factorPerformance.forEach(
+        factor => {
+
+            rows.push([
+                factor.category || "",
+
+                factor.totalAssessments ?? "",
+
+                factor.totalWeight !== undefined
+                    ? factor.totalWeight + "%"
+                    : ""
+            ]);
+
+        }
+    );
+
+
+    rows.push([]);
+
+
+    // ======================================
+    // EXISTING ASSESSMENT MARKS
+    // ======================================
+
+    rows.push([
+        "EXISTING ASSESSMENT MARKS"
+    ]);
+
+    rows.push([
+        "Assessment",
+        "Weight",
+        "Existing Mark"
+    ]);
+
+
+    factorPerformance.forEach(
+        factor => {
+
+            if (
+                !Array.isArray(
+                    factor.assessments
+                )
+            ) {
+
+                return;
+            }
+
+
+            factor.assessments.forEach(
+                (assessment, index) => {
+
+                    // Only export assessments
+                    // that already have a mark.
+
+                    if (
+                        assessment.mark === undefined ||
+                        assessment.mark === null ||
+                        assessment.mark === ""
+                    ) {
+
+                        return;
+                    }
+
+
+                    rows.push([
+                        `${factor.category} ${index + 1}`,
+
+                        assessment.weight !== undefined
+                            ? assessment.weight + "%"
+                            : "",
+
+                        assessment.mark + "%"
+                    ]);
+
+                }
+            );
+
+        }
+    );
+
+
+    rows.push([]);
+
+
+    // ======================================
+    // NON-EXISTING ASSESSMENT MARKS
+    // ======================================
+
+    rows.push([
+        "NON-EXISTING ASSESSMENT MARKS"
+    ]);
+
+    rows.push([
+        "Assessment",
+        "Weight",
+        "Existing Mark"
+    ]);
+
+
+    factorPerformance.forEach(
+        factor => {
+
+            if (
+                !Array.isArray(
+                    factor.assessments
+                )
+            ) {
+
+                return;
+            }
+
+
+            factor.assessments.forEach(
+                (assessment, index) => {
+
+                    // Only export assessments
+                    // without a mark.
+
+                    if (
+                        assessment.mark !== undefined &&
+                        assessment.mark !== null &&
+                        assessment.mark !== ""
+                    ) {
+
+                        return;
+                    }
+
+
+                    rows.push([
+                        `${factor.category} ${index + 1}`,
+
+                        assessment.weight !== undefined
+                            ? assessment.weight + "%"
+                            : "",
+
+                        "—"
+                    ]);
+
+                }
+            );
+
+        }
+    );
+
+
+    // ======================================
+    // Convert rows to CSV
+    // ======================================
+
+    const csvContent =
+        rows
+            .map(row =>
+                row
+                    .map(value =>
+                        csvEscape(value)
+                    )
+                    .join(",")
+            )
+            .join("\r\n");
+
+
+    // ======================================
+    // Create CSV file
+    // ======================================
+
+    const blob =
+        new Blob(
+            [
+                "\uFEFF",
+                csvContent
+            ],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+
+    link.download =
+        `Student_Performance_${
+            student.studentNumber || "Data"
+        }.csv`;
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+
+    console.log(
+        "Student data CSV exported successfully."
+    );
+}
+
+
+// ======================================
+// CSV VALUE ESCAPING
+// ======================================
+
+function csvEscape(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+    }
+
+
+    const stringValue =
+        String(value);
+
+
+    if (
+        stringValue.includes(",") ||
+        stringValue.includes('"') ||
+        stringValue.includes("\n") ||
+        stringValue.includes("\r")
+    ) {
+
+        return `"${stringValue.replace(
+            /"/g,
+            '""'
+        )}"`;
+    }
+
+
+    return stringValue;
 }
