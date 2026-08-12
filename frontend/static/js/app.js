@@ -151,14 +151,6 @@ function renderAssessmentTable() {
             <td>
 
                 <button
-                    class="btn btn-sm btn-warning edit-btn"
-                    data-index="${index}">
-
-                    Edit
-
-                </button>
-
-                <button
                     class="btn btn-sm btn-danger delete-btn"
                     data-index="${index}">
 
