@@ -159,3 +159,101 @@ main{
     opacity:.15;
 
 }
+
+/* ==========================================
+   DARK MODE
+========================================== */
+
+body.dark-mode {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+
+/* Main content */
+
+body.dark-mode main {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+
+/* Cards */
+
+body.dark-mode .card {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+    border-color: #333333;
+}
+
+body.dark-mode .card-header {
+    background-color: #252525;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .card-body {
+    color: #f1f1f1;
+}
+
+
+/* Tables */
+
+body.dark-mode .table {
+    color: #f1f1f1;
+}
+
+body.dark-mode .table-light {
+    --bs-table-bg: #252525;
+    --bs-table-color: #ffffff;
+}
+
+body.dark-mode .table-bordered {
+    border-color: #444444;
+}
+
+
+/* Text */
+
+body.dark-mode .text-muted {
+    color: #aaaaaa !important;
+}
+
+
+/* Inputs */
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #252525;
+    color: #ffffff;
+    border-color: #444444;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+    background-color: #252525;
+    color: #ffffff;
+    border-color: #4E2A84;
+}
+
+
+/* Horizontal rules */
+
+body.dark-mode hr {
+    border-color: #444444;
+}
+
+
+/* Navbar */
+
+body.dark-mode .navbar {
+    background: #24133f;
+}
+
+
+/* Footer */
+
+body.dark-mode footer {
+    background-color: #171717;
+    color: #ffffff;
+}

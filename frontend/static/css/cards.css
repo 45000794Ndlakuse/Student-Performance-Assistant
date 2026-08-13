@@ -80,3 +80,60 @@
     transform:translateY(-2px);
 
 }
+
+.btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: #ffffff;
+}
+
+.btn-purple:hover {
+    background-color: #5a32a3;
+    border-color: #5a32a3;
+    color: #ffffff;
+}
+
+/* ==========================================
+   DARK MODE - CARDS
+========================================== */
+
+body.dark-mode .welcome-card {
+    background: #1e1e1e;
+    color: #f1f1f1;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-mode .welcome-card h3 {
+    color: #ffffff;
+}
+
+body.dark-mode .welcome-card p {
+    color: #bdbdbd;
+}
+
+body.dark-mode .card-icon {
+    color: var(--primary);
+}
+
+body.dark-mode .btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+body.dark-mode .btn-primary:hover {
+    background: #5a32a3;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-purple:hover {
+    background-color: #5a32a3;
+    border-color: #5a32a3;
+    color: #ffffff;
+}

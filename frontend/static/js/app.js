@@ -1,5 +1,282 @@
 console.log("Student Performance Assistant Loaded.");
+// ==========================================
+// GLOBAL HEADER TOOLS
+// ==========================================
 
+document.addEventListener("DOMContentLoaded", () => {
+
+    console.log("HEADER TOOLS SCRIPT REACHED");
+
+
+    // --------------------------------------
+    // Header Elements
+    // --------------------------------------
+
+    const darkModeToggle =
+        document.getElementById("darkModeToggle");
+
+    const darkModeIcon =
+        document.getElementById("darkModeIcon");
+
+    const settingsToggle =
+        document.getElementById("settingsToggle");
+
+    const settingsSidebar =
+        document.getElementById("settingsSidebar");
+
+    const settingsOverlay =
+        document.getElementById("settingsOverlay");
+
+    const settingsClose =
+        document.getElementById("settingsClose");
+
+    const closeAppButton =
+        document.getElementById("closeAppButton");
+
+
+    console.log(
+        "Dark mode button:",
+        darkModeToggle
+    );
+
+    console.log(
+        "Dark mode icon:",
+        darkModeIcon
+    );
+
+    console.log(
+        "Settings button:",
+        settingsToggle
+    );
+
+
+    // --------------------------------------
+    // Dark Mode
+    // --------------------------------------
+
+    const savedTheme =
+        localStorage.getItem("theme");
+
+
+    if (savedTheme === "dark") {
+
+        document.body.classList.add(
+            "dark-mode"
+        );
+
+        if (darkModeIcon) {
+
+            darkModeIcon.classList.remove(
+                "fa-moon"
+            );
+
+            darkModeIcon.classList.add(
+                "fa-sun"
+            );
+
+        }
+
+    }
+
+
+    if (darkModeToggle) {
+
+        darkModeToggle.addEventListener(
+            "click",
+            () => {
+
+                document.body.classList.toggle(
+                    "dark-mode"
+                );
+
+
+                const darkModeEnabled =
+                    document.body.classList.contains(
+                        "dark-mode"
+                    );
+
+
+                localStorage.setItem(
+                    "theme",
+                    darkModeEnabled
+                        ? "dark"
+                        : "light"
+                );
+
+
+                if (darkModeIcon) {
+
+                    darkModeIcon.classList.toggle(
+                        "fa-moon",
+                        !darkModeEnabled
+                    );
+
+                    darkModeIcon.classList.toggle(
+                        "fa-sun",
+                        darkModeEnabled
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // --------------------------------------
+    // Settings Sidebar
+    // --------------------------------------
+
+    function openSettings() {
+
+        if (!settingsSidebar) {
+
+            return;
+
+        }
+
+
+        settingsSidebar.classList.add(
+            "active"
+        );
+
+
+        if (settingsOverlay) {
+
+            settingsOverlay.classList.add(
+                "active"
+            );
+
+        }
+
+    }
+
+
+    function closeSettings() {
+
+        if (!settingsSidebar) {
+
+            return;
+
+        }
+
+
+        settingsSidebar.classList.remove(
+            "active"
+        );
+
+
+        if (settingsOverlay) {
+
+            settingsOverlay.classList.remove(
+                "active"
+            );
+
+        }
+
+    }
+
+
+    if (settingsToggle) {
+
+        settingsToggle.addEventListener(
+            "click",
+            openSettings
+        );
+
+    }
+
+
+    if (settingsClose) {
+
+        settingsClose.addEventListener(
+            "click",
+            closeSettings
+        );
+
+    }
+
+
+    if (settingsOverlay) {
+
+        settingsOverlay.addEventListener(
+            "click",
+            closeSettings
+        );
+
+    }
+
+
+    // --------------------------------------
+    // Close Settings With Escape
+    // --------------------------------------
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Escape") {
+
+                closeSettings();
+
+            }
+
+        }
+    );
+
+
+    // --------------------------------------
+// Close Application
+// --------------------------------------
+
+const closeAppButton =
+    document.getElementById("closeAppButton");
+
+if (closeAppButton) {
+
+    closeAppButton.addEventListener(
+        "click",
+        async () => {
+
+            const confirmed =
+                window.confirm(
+                    "Are you sure you want to close the Student Performance Assistant?"
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+
+                await fetch(
+                    "/shutdown",
+                    {
+                        method: "POST"
+                    }
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Unable to close application:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+}
+
+    console.log(
+        "Header tools initialized successfully."
+    );
+
+});
 // ==========================================
 // Journey Introduction Model
 // ==========================================

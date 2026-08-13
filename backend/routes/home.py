@@ -1,11 +1,18 @@
 from flask import Blueprint
 from flask import render_template
+import os
+import signal
 
 home_bp = Blueprint(
     "home",
     __name__
 )
 
+@home_bp.route("/shutdown", methods=["POST"])
+def shutdown():
+    os.kill(os.getpid(), signal.SIGINT)
+
+    return "", 204
 
 @home_bp.route("/")
 def home():

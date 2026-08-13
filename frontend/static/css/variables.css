@@ -19,3 +19,20 @@
     --danger:#E74C3C;
 
 }
+
+/* ===========================
+   Dark Mode
+=========================== */
+
+body.dark-mode {
+    --background: #121212;
+    --surface: #1e1e1e;
+    --card-background: #1e1e1e;
+
+    --text: #f1f1f1;
+    --text-muted: #b8b8b8;
+
+    --border: #333333;
+
+    --primary: #4E2A84;
+}

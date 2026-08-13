@@ -9,6 +9,12 @@
 
     <title>Student Performance Assistant</title>
 
+    <link
+    rel="icon"
+    type="image/png"
+    href="{{ url_for('static', filename='images/favicon.png') }}"
+>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +34,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css') }}">
@@ -39,6 +46,122 @@
 <body>
 
     {% include 'components/navbar.html' %}
+
+<!-- Settings Overlay -->
+
+<div
+    id="settingsOverlay"
+    class="settings-overlay">
+</div>
+
+
+<!-- Settings Sidebar -->
+
+<aside
+    id="settingsSidebar"
+    class="settings-sidebar">
+
+    <div class="settings-header">
+
+        <h3>
+            Navigation
+        </h3>
+
+        <button
+            type="button"
+            id="settingsClose"
+            class="settings-close"
+            aria-label="Close navigation">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+    </div>
+
+
+    <div class="settings-content">
+
+        <p class="settings-label">
+            Application Phases
+        </p>
+
+
+        <a href="/" class="settings-link">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>
+                Phase 0 — Welcome
+            </span>
+
+        </a>
+
+
+        <a href="/phase1" class="settings-link">
+
+            <i class="fa-solid fa-user"></i>
+
+            <span>
+                Phase 1 — Assessment Setup
+            </span>
+
+        </a>
+
+
+        <a href="/phase2" class="settings-link">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>
+                Phase 2 — Academic Profile
+            </span>
+
+        </a>
+
+
+        <a href="/phase3" class="settings-link">
+
+            <i class="fa-solid fa-lightbulb"></i>
+
+            <span>
+                Phase 3 — Improvement Options
+            </span>
+
+        </a>
+
+
+        <a href="/phase4" class="settings-link">
+
+            <i class="fa-solid fa-file-lines"></i>
+
+            <span>
+                Phase 4 — Performance Summary
+            </span>
+
+        </a>
+
+    </div>
+
+
+    <div class="settings-footer">
+
+        <button
+            type="button"
+            id="closeAppButton"
+            class="close-app-button">
+
+            <i class="fa-solid fa-power-off"></i>
+
+            Close Application
+
+        </button>
+
+    </div>
+
+</aside>
+
+    {% include 'components/settings_sidebar.html' %}
 
     <main>
 
