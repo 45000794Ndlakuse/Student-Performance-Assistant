@@ -541,6 +541,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+    // --------------------------------------
+    // Load marks from returning student CSV
+    // --------------------------------------
+
+    const storedReturningMarks =
+        localStorage.getItem(
+            "returningAssessmentMarks"
+        );
+
+
+    if (storedReturningMarks) {
+
+        const returningMarks =
+            JSON.parse(
+                storedReturningMarks
+            );
+
+
+        const markInputs =
+            document.querySelectorAll(
+                ".mark-input"
+            );
+
+
+        markInputs.forEach((input, index) => {
+
+            const importedAssessment =
+                returningMarks[index];
+
+
+            if (!importedAssessment) {
+                return;
+            }
+
+
+            if (
+                importedAssessment.mark !== undefined &&
+                importedAssessment.mark !== null &&
+                importedAssessment.mark !== ""
+            ) {
+
+                input.value =
+                    importedAssessment.mark;
+
+            }
+
+        });
+
+    }
+
 });
 
 // ==========================================
