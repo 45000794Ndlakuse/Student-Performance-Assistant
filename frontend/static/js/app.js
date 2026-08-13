@@ -4,16 +4,6 @@ console.log("Student Performance Assistant Loaded.");
 // Journey Introduction Model
 // ==========================================
 
-//const journeyModalElement = document.getElementById("journeyModal");
-
-//if (journeyModalElement) {
-//
-//    const journeyModal = new bootstrap.Modal(journeyModalElement);
-
-//    journeyModal.show();
-
-//}
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const category = document.getElementById("assessmentCategory");
@@ -523,15 +513,29 @@ document.addEventListener("DOMContentLoaded", () => {
                         type="number"
                         class="form-control mark-input"
                         data-weight="${item.weight / item.quantity}"
+                        data-mark="${item.marks && item.marks[i - 1] !== undefined
+                    ? item.marks[i - 1]
+                    : ""}"
                         min="0"
                         max="100"
                         placeholder="0 - 100">
+
+                        
 
                 </td>
 
             </tr>
 
             `;
+            document.querySelectorAll(".mark-input").forEach(input => {
+
+                const mark = input.dataset.mark;
+
+                if (mark !== "") {
+                    input.value = mark;
+                }
+
+            });
 
         }
 
@@ -1577,20 +1581,20 @@ function generateImprovementOptions() {
 
             // Number of assessments participated in
             const participatedCount =
-    scenario.participation
-        .filter(item => item.participated)
-        .reduce(
-            (count, item) => {
+                scenario.participation
+                    .filter(item => item.participated)
+                    .reduce(
+                        (count, item) => {
 
-                return count +
-                    item.assessments.filter(
-                        assessment =>
-                            assessment.category === category
-                    ).length;
+                            return count +
+                                item.assessments.filter(
+                                    assessment =>
+                                        assessment.category === category
+                                ).length;
 
-            },
-            0
-        );
+                        },
+                        0
+                    );
 
             const requiredMark =
                 (
@@ -1639,59 +1643,59 @@ function generateImprovementOptions() {
     );
 
     // ------------------------------------------
-// Determine Feasible Improvement Scenarios
-// ------------------------------------------
+    // Determine Feasible Improvement Scenarios
+    // ------------------------------------------
 
-const feasibleScenarios = [];
+    const feasibleScenarios = [];
 
-scenarioPlans.forEach(plan => {
+    scenarioPlans.forEach(plan => {
 
-    // At least one assessment must be
-    // participated in
-    const hasParticipation =
-        plan.requiredScores.some(
-            score => score !== null
-        );
+        // At least one assessment must be
+        // participated in
+        const hasParticipation =
+            plan.requiredScores.some(
+                score => score !== null
+            );
 
-    // Every required mark must be achievable
-    const allMarksAchievable =
-        plan.requiredScores.every(score => {
+        // Every required mark must be achievable
+        const allMarksAchievable =
+            plan.requiredScores.every(score => {
 
-            // null means this factor is
-            // not involved in this scenario
-            if (score === null) {
-                return true;
-            }
+                // null means this factor is
+                // not involved in this scenario
+                if (score === null) {
+                    return true;
+                }
 
-            return score >= 0 && score <= 100;
+                return score >= 0 && score <= 100;
 
-        });
+            });
 
-    if (
-        hasParticipation &&
-        allMarksAchievable
-    ) {
+        if (
+            hasParticipation &&
+            allMarksAchievable
+        ) {
 
-        feasibleScenarios.push(plan);
+            feasibleScenarios.push(plan);
 
-    }
+        }
 
-});
+    });
 
-console.log(
-    "Feasible Improvement Scenarios:",
-    feasibleScenarios
-);
+    console.log(
+        "Feasible Improvement Scenarios:",
+        feasibleScenarios
+    );
 
-console.log(
-    "Number of Feasible Scenarios:",
-    feasibleScenarios.length
-);
+    console.log(
+        "Number of Feasible Scenarios:",
+        feasibleScenarios.length
+    );
 
-localStorage.setItem(
-    "feasibleScenarios",
-    JSON.stringify(feasibleScenarios)
-);
+    localStorage.setItem(
+        "feasibleScenarios",
+        JSON.stringify(feasibleScenarios)
+    );
 
     // ------------------------------------------
     // Number of remaining assessments
@@ -1725,162 +1729,162 @@ localStorage.setItem(
 
 
     const improvementMessage =
-    document.getElementById("improvementMessage");
+        document.getElementById("improvementMessage");
 
-const scenarioResults =
-    document.getElementById("scenarioResults");
+    const scenarioResults =
+        document.getElementById("scenarioResults");
 
-const scenarioTemplate =
-    document.getElementById("scenarioTemplate");
+    const scenarioTemplate =
+        document.getElementById("scenarioTemplate");
 
-if (
-    !improvementMessage ||
-    !scenarioResults ||
-    !scenarioTemplate
-) {
+    if (
+        !improvementMessage ||
+        !scenarioResults ||
+        !scenarioTemplate
+    ) {
 
-    console.error(
-        "Phase 3 scenario display elements not found"
-    );
+        console.error(
+            "Phase 3 scenario display elements not found"
+        );
 
-    return;
-}
-
-
-// Clear previous results
-
-scenarioResults.innerHTML = "";
+        return;
+    }
 
 
-// ------------------------------------------
-// No feasible scenarios
-// ------------------------------------------
+    // Clear previous results
 
-if (feasibleScenarios.length === 0) {
+    scenarioResults.innerHTML = "";
+
+
+    // ------------------------------------------
+    // No feasible scenarios
+    // ------------------------------------------
+
+    if (feasibleScenarios.length === 0) {
+
+        improvementMessage.className =
+            "alert alert-warning";
+
+        improvementMessage.innerHTML =
+            "No feasible improvement plans were found " +
+            "for the desired improvement.";
+
+        return;
+    }
+
+
+    // ------------------------------------------
+    // Feasible scenarios found
+    // ------------------------------------------
 
     improvementMessage.className =
-        "alert alert-warning";
+        "alert alert-success";
 
     improvementMessage.innerHTML =
-        "No feasible improvement plans were found " +
-        "for the desired improvement.";
-
-    return;
-}
+        `<strong>${feasibleScenarios.length}</strong> feasible improvement plan(s) found.`;
 
 
-// ------------------------------------------
-// Feasible scenarios found
-// ------------------------------------------
+    // ------------------------------------------
+    // Render scenarios
+    // ------------------------------------------
 
-improvementMessage.className =
-    "alert alert-success";
+    feasibleScenarios.forEach(plan => {
 
-improvementMessage.innerHTML =
-    `<strong>${feasibleScenarios.length}</strong> feasible improvement plan(s) found.`;
-
-
-// ------------------------------------------
-// Render scenarios
-// ------------------------------------------
-
-feasibleScenarios.forEach(plan => {
-
-    const scenario =
-        scenarioTemplate.content.cloneNode(true);
+        const scenario =
+            scenarioTemplate.content.cloneNode(true);
 
 
-    // --------------------------------------
-    // Scenario number
-    // --------------------------------------
+        // --------------------------------------
+        // Scenario number
+        // --------------------------------------
 
-    const scenarioTitle =
-        scenario.querySelector(
-            ".scenario-title"
-        );
-
-    scenarioTitle.textContent =
-        `Scenario ${plan.scenario}`;
-
-
-    // --------------------------------------
-    // Improvement
-    // --------------------------------------
-
-    const scenarioImprovement =
-        scenario.querySelector(
-            ".scenario-improvement"
-        );
-
-    scenarioImprovement.textContent =
-        `+${plan.targetImprovement.toFixed(2)}%`;
-
-
-    // --------------------------------------
-    // Target participation
-    // --------------------------------------
-
-    const scenarioTarget =
-        scenario.querySelector(
-            ".scenario-target"
-        );
-
-    scenarioTarget.textContent =
-        `${plan.targetParticipation.toFixed(2)}%`;
-
-
-    // --------------------------------------
-    // Required scores
-    // --------------------------------------
-
-    const scenarioScores =
-        scenario.querySelector(
-            ".scenario-scores"
-        );
-
-
-    factorPerformance.forEach(
-        (factor, index) => {
-
-            const requiredScore =
-                plan.requiredScores[index];
-
-
-            const scoreRow =
-                document.createElement("p");
-
-
-            const category =
-                factor.category;
-
-
-            if (requiredScore === null) {
-
-                scoreRow.innerHTML =
-    `<strong>${category}:</strong> —`;
-
-            }
-            else {
-
-                scoreRow.innerHTML =
-                    `<strong>${category}:</strong> ${requiredScore.toFixed(2)}%`;
-
-            }
-
-
-            scenarioScores.appendChild(
-                scoreRow
+        const scenarioTitle =
+            scenario.querySelector(
+                ".scenario-title"
             );
 
-        }
-    );
+        scenarioTitle.textContent =
+            `Scenario ${plan.scenario}`;
 
 
-    scenarioResults.appendChild(
-        scenario
-    );
+        // --------------------------------------
+        // Improvement
+        // --------------------------------------
 
-});
+        const scenarioImprovement =
+            scenario.querySelector(
+                ".scenario-improvement"
+            );
+
+        scenarioImprovement.textContent =
+            `+${plan.targetImprovement.toFixed(2)}%`;
+
+
+        // --------------------------------------
+        // Target participation
+        // --------------------------------------
+
+        const scenarioTarget =
+            scenario.querySelector(
+                ".scenario-target"
+            );
+
+        scenarioTarget.textContent =
+            `${plan.targetParticipation.toFixed(2)}%`;
+
+
+        // --------------------------------------
+        // Required scores
+        // --------------------------------------
+
+        const scenarioScores =
+            scenario.querySelector(
+                ".scenario-scores"
+            );
+
+
+        factorPerformance.forEach(
+            (factor, index) => {
+
+                const requiredScore =
+                    plan.requiredScores[index];
+
+
+                const scoreRow =
+                    document.createElement("p");
+
+
+                const category =
+                    factor.category;
+
+
+                if (requiredScore === null) {
+
+                    scoreRow.innerHTML =
+                        `<strong>${category}:</strong> —`;
+
+                }
+                else {
+
+                    scoreRow.innerHTML =
+                        `<strong>${category}:</strong> ${requiredScore.toFixed(2)}%`;
+
+                }
+
+
+                scenarioScores.appendChild(
+                    scoreRow
+                );
+
+            }
+        );
+
+
+        scenarioResults.appendChild(
+            scenario
+        );
+
+    });
 
 }
 
@@ -2514,36 +2518,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // --------------------------------------
-// Feasible Improvement Scenarios
-// --------------------------------------
+    // Feasible Improvement Scenarios
+    // --------------------------------------
 
-const storedFeasibleScenarios =
-    localStorage.getItem(
-        "feasibleScenarios"
-    );
-
-console.log(
-    "Feasible Scenarios:",
-    storedFeasibleScenarios
-);
-
-if (storedFeasibleScenarios) {
-
-    const feasibleScenarios =
-        JSON.parse(
-            storedFeasibleScenarios
+    const storedFeasibleScenarios =
+        localStorage.getItem(
+            "feasibleScenarios"
         );
 
     console.log(
-        "Phase 4 - Feasible Scenarios:",
-        feasibleScenarios
+        "Feasible Scenarios:",
+        storedFeasibleScenarios
     );
 
-    populatePhase4Scenarios(
-        feasibleScenarios
-    );
+    if (storedFeasibleScenarios) {
 
-}
+        const feasibleScenarios =
+            JSON.parse(
+                storedFeasibleScenarios
+            );
+
+        console.log(
+            "Phase 4 - Feasible Scenarios:",
+            feasibleScenarios
+        );
+
+        populatePhase4Scenarios(
+            feasibleScenarios
+        );
+
+    }
 
 
     // ======================================
@@ -2949,8 +2953,8 @@ function saveStudentDataAsCSV() {
         student.firstName || "",
         student.surname || "",
         student.studentNumber ||
-            student.studentNum ||
-            "",
+        student.studentNum ||
+        "",
         student.module || ""
     ]);
 
@@ -2992,8 +2996,8 @@ function saveStudentDataAsCSV() {
 
             const totalWeight =
                 factor.weight !== undefined &&
-                factor.weight !== null &&
-                factor.weight !== ""
+                    factor.weight !== null &&
+                    factor.weight !== ""
                     ? factor.weight
                     : "-";
 
@@ -3032,8 +3036,8 @@ function saveStudentDataAsCSV() {
                     totalAssessments,
                     totalWeight,
                     existingMark !== null &&
-                    existingMark !== undefined &&
-                    existingMark !== ""
+                        existingMark !== undefined &&
+                        existingMark !== ""
                         ? existingMark
                         : "-"
                 ]);
@@ -3156,25 +3160,25 @@ function saveStudentDataAsCSV() {
     );
 
     const csvDownloadMessage =
-    document.getElementById(
-        "csvDownloadMessage"
-    );
+        document.getElementById(
+            "csvDownloadMessage"
+        );
 
-if (csvDownloadMessage) {
+    if (csvDownloadMessage) {
 
-    csvDownloadMessage.textContent =
-        "CSV file downloaded successfully: NWU_student_performance_summary.csv";
+        csvDownloadMessage.textContent =
+            "CSV file downloaded successfully: NWU_student_performance_summary.csv";
 
-    csvDownloadMessage.classList.remove(
-        "d-none"
-    );
-
-    setTimeout(() => {
-
-        csvDownloadMessage.classList.add(
+        csvDownloadMessage.classList.remove(
             "d-none"
         );
 
-    }, 5000);
-}
+        setTimeout(() => {
+
+            csvDownloadMessage.classList.add(
+                "d-none"
+            );
+
+        }, 5000);
+    }
 }
