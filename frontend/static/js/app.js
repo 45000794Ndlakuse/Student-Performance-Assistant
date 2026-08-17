@@ -30,9 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const settingsClose =
         document.getElementById("settingsClose");
 
-    const closeAppButton =
-        document.getElementById("closeAppButton");
-
 
     console.log(
         "Dark mode button:",
